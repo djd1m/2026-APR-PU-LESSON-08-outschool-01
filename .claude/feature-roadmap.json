@@ -12,7 +12,10 @@
       "status": "done",
       "branch": "feature/001-auth-registration",
       "epic": "E1",
-      "stories": ["US-P01", "US-T01"],
+      "stories": [
+        "US-P01",
+        "US-T01"
+      ],
       "depends_on": [],
       "estimated_effort": "M"
     },
@@ -25,8 +28,12 @@
       "status": "done",
       "branch": "feature/002-onboarding-quiz",
       "epic": "E1",
-      "stories": ["US-P02"],
-      "depends_on": ["auth-registration"],
+      "stories": [
+        "US-P02"
+      ],
+      "depends_on": [
+        "auth-registration"
+      ],
       "estimated_effort": "S"
     },
     {
@@ -38,8 +45,13 @@
       "status": "done",
       "branch": "feature/003-class-catalog",
       "epic": "E2",
-      "stories": ["US-P03", "US-P04"],
-      "depends_on": ["auth-registration"],
+      "stories": [
+        "US-P03",
+        "US-P04"
+      ],
+      "depends_on": [
+        "auth-registration"
+      ],
       "estimated_effort": "L"
     },
     {
@@ -47,11 +59,18 @@
       "title": "Профили учителей",
       "description": "Профиль с портфолио, образованием, отзывами, рейтингом и верификацией",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E2",
-      "stories": ["US-T01", "US-T02"],
-      "depends_on": ["auth-registration"],
-      "estimated_effort": "M"
+      "stories": [
+        "US-T01",
+        "US-T02"
+      ],
+      "depends_on": [
+        "auth-registration"
+      ],
+      "estimated_effort": "M",
+      "number": 4,
+      "branch": "feature/004-teacher-profiles"
     },
     {
       "id": "class-creation",
@@ -60,8 +79,13 @@
       "priority": "mvp",
       "status": "planned",
       "epic": "E2",
-      "stories": ["US-T02", "US-A01"],
-      "depends_on": ["teacher-profiles"],
+      "stories": [
+        "US-T02",
+        "US-A01"
+      ],
+      "depends_on": [
+        "teacher-profiles"
+      ],
       "estimated_effort": "M"
     },
     {
@@ -71,8 +95,12 @@
       "priority": "mvp",
       "status": "planned",
       "epic": "E3",
-      "stories": ["US-P05"],
-      "depends_on": ["class-catalog"],
+      "stories": [
+        "US-P05"
+      ],
+      "depends_on": [
+        "class-catalog"
+      ],
       "estimated_effort": "M"
     },
     {
@@ -82,8 +110,13 @@
       "priority": "mvp",
       "status": "planned",
       "epic": "E3",
-      "stories": ["US-P06", "US-T05"],
-      "depends_on": ["trial-booking"],
+      "stories": [
+        "US-P06",
+        "US-T05"
+      ],
+      "depends_on": [
+        "trial-booking"
+      ],
       "estimated_effort": "XL"
     },
     {
@@ -93,8 +126,12 @@
       "priority": "mvp",
       "status": "planned",
       "epic": "E3",
-      "stories": ["US-T03"],
-      "depends_on": ["class-creation"],
+      "stories": [
+        "US-T03"
+      ],
+      "depends_on": [
+        "class-creation"
+      ],
       "estimated_effort": "M"
     },
     {
@@ -104,8 +141,15 @@
       "priority": "mvp",
       "status": "planned",
       "epic": "E4",
-      "stories": ["US-P07", "US-T04", "US-C01a"],
-      "depends_on": ["payment-integration", "scheduling"],
+      "stories": [
+        "US-P07",
+        "US-T04",
+        "US-C01a"
+      ],
+      "depends_on": [
+        "payment-integration",
+        "scheduling"
+      ],
       "estimated_effort": "XL"
     },
     {
@@ -115,8 +159,13 @@
       "priority": "mvp",
       "status": "planned",
       "epic": "E5",
-      "stories": ["US-P09", "US-A02"],
-      "depends_on": ["video-classroom"],
+      "stories": [
+        "US-P09",
+        "US-A02"
+      ],
+      "depends_on": [
+        "video-classroom"
+      ],
       "estimated_effort": "M"
     },
     {
@@ -126,8 +175,12 @@
       "priority": "mvp",
       "status": "planned",
       "epic": "E5",
-      "stories": ["US-P08"],
-      "depends_on": ["video-classroom"],
+      "stories": [
+        "US-P08"
+      ],
+      "depends_on": [
+        "video-classroom"
+      ],
       "estimated_effort": "M"
     },
     {
@@ -137,8 +190,13 @@
       "priority": "mvp",
       "status": "planned",
       "epic": "E5",
-      "stories": ["US-T03", "US-T05"],
-      "depends_on": ["payment-integration"],
+      "stories": [
+        "US-T03",
+        "US-T05"
+      ],
+      "depends_on": [
+        "payment-integration"
+      ],
       "estimated_effort": "M"
     },
     {
@@ -148,8 +206,14 @@
       "priority": "mvp",
       "status": "planned",
       "epic": "E5",
-      "stories": ["US-A01", "US-A02", "US-A03"],
-      "depends_on": ["reviews-ratings"],
+      "stories": [
+        "US-A01",
+        "US-A02",
+        "US-A03"
+      ],
+      "depends_on": [
+        "reviews-ratings"
+      ],
       "estimated_effort": "L"
     },
     {
@@ -159,8 +223,13 @@
       "priority": "v1.0",
       "status": "planned",
       "epic": "E6",
-      "stories": ["US-P11"],
-      "depends_on": ["class-catalog", "reviews-ratings"],
+      "stories": [
+        "US-P11"
+      ],
+      "depends_on": [
+        "class-catalog",
+        "reviews-ratings"
+      ],
       "estimated_effort": "L"
     },
     {
@@ -170,8 +239,13 @@
       "priority": "v1.0",
       "status": "planned",
       "epic": "E6",
-      "stories": ["US-C01b", "US-C02"],
-      "depends_on": ["video-classroom"],
+      "stories": [
+        "US-C01b",
+        "US-C02"
+      ],
+      "depends_on": [
+        "video-classroom"
+      ],
       "estimated_effort": "L"
     },
     {
@@ -181,8 +255,12 @@
       "priority": "v1.0",
       "status": "planned",
       "epic": "E6",
-      "stories": ["US-P10"],
-      "depends_on": ["payment-integration"],
+      "stories": [
+        "US-P10"
+      ],
+      "depends_on": [
+        "payment-integration"
+      ],
       "estimated_effort": "M"
     },
     {
@@ -193,7 +271,9 @@
       "status": "planned",
       "epic": "E6",
       "stories": [],
-      "depends_on": ["auth-registration"],
+      "depends_on": [
+        "auth-registration"
+      ],
       "estimated_effort": "M"
     }
   ]
