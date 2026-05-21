@@ -109,6 +109,8 @@
 
 - [x] #S8: calculateAge — Age calculation from birth date with month/day boundary handling. Avoids the common off-by-one error with partial-year birthdays. | Source: `packages/shared/src/utils/index.ts:20-28`
 
+- [x] #S9: Null-safe data normalization in useEffect — `setData(raw.map(t => ({ ...t, name: t.name || t.user?.name || 'Default', items: t.items || [] })))` — normalize API responses with fallbacks before setting state. Prevents crashes from missing fields. | Source: `packages/web/src/app/(main)/teachers/page.tsx` | Maturity: 🔴 Alpha
+
 ---
 
 ## Хуки
@@ -124,6 +126,8 @@
 - [x] #H5: post-agent-insights.cjs (PostToolUse:Agent) — After each Agent tool call, checks if insights or roadmap changed, commits+pushes if so. Enables real-time persistence of knowledge captured by subagents. | Source: `.claude/hooks/post-agent-insights.cjs`
 
 - [x] #H6: settings.json Hook Orchestration — Complete hook configuration: SessionStart (inject insights) -> PostToolUse:Agent (commit after agents) -> Stop (autocommit roadmap, insights, plans, then autopush). Ordering is critical (see #R3). | Source: `.claude/settings.json`
+
+- [x] #H7: PostToolUse hook for Agent insight capture — Auto-commits insights + roadmap after each Agent tool completion. Prevents data loss if session interrupted. | Source: `.claude/hooks/post-agent-insights.cjs` | Maturity: 🟡 Beta
 
 ---
 
