@@ -106,7 +106,7 @@ export default function ClassesPage() {
 
       try {
         const res = await apiFetch<ClassesResponse>(`/classes?${params.toString()}`);
-        const mapped: ClassItem[] = res.items.map((item) => ({
+        const mapped: ClassItem[] = (res?.items || []).map((item) => ({
           id: item.id,
           title: item.title,
           teacherName: item.teacherName,
@@ -124,8 +124,8 @@ export default function ClassesPage() {
         } else {
           setClasses(mapped);
         }
-        setTotalPages(res.meta.totalPages);
-        setTotal(res.meta.total);
+        setTotalPages(res?.meta?.totalPages ?? 1);
+        setTotal(res?.meta?.total ?? 0);
       } catch {
         if (!append) setClasses([]);
       } finally {

@@ -10,15 +10,41 @@ import { apiFetch } from '@/lib/api';
 
 type TabId = 'schedule' | 'progress' | 'payments' | 'children';
 
-interface UpcomingClass {
-  enrollmentId: string;
+interface BookingItem {
+  id: string;
   classId: string;
+  classTitle: string;
   sectionId: string;
   teacherName: string;
   nextSession: string;
   nextSessionEnd: string;
   status: 'upcoming' | 'completed' | 'cancelled';
 }
+
+interface DashboardData {
+  upcomingClasses: BookingItem[];
+  totalSpent: number;
+  childrenCount: number;
+}
+
+const tabs: { id: TabId; label: string }[] = [
+  { id: 'schedule', label: 'Расписание' },
+  { id: 'progress', label: 'Прогресс' },
+  { id: 'payments', label: 'Платежи' },
+  { id: 'children', label: 'Дети' },
+];
+
+const statusLabel: Record<string, string> = {
+  upcoming: 'Предстоит',
+  completed: 'Завершено',
+  cancelled: 'Отменено',
+};
+
+const statusVariant: Record<string, 'primary' | 'secondary'> = {
+  upcoming: 'primary',
+  completed: 'secondary',
+  cancelled: 'secondary',
+};
 
 function isClassroomAvailable(nextSession: string): boolean {
   const startTime = new Date(nextSession).getTime();

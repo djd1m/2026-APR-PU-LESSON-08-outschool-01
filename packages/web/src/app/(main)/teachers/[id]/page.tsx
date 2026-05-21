@@ -169,7 +169,7 @@ export default function TeacherProfilePage() {
             </div>
 
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {profile.subjects.map((subj) => (
+              {(profile.subjects || []).map((subj) => (
                 <Badge key={subj} variant="primary">
                   {subj}
                 </Badge>
@@ -179,7 +179,7 @@ export default function TeacherProfilePage() {
             <div className="mt-4 flex items-center gap-2">
               <StarRating rating={profile.rating} size="lg" />
               <span className="text-sm text-gray-500">
-                {profile.rating.toFixed(1)} ({profile.reviewCount}{' '}
+                {(profile.rating ?? 0).toFixed(1)} ({profile.reviewCount ?? 0}{' '}
                 {profile.reviewCount === 1
                   ? 'отзыв'
                   : profile.reviewCount < 5
@@ -193,7 +193,7 @@ export default function TeacherProfilePage() {
 
         {/* Stats */}
         <div className="mt-6 pt-6 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <StatBlock label="Рейтинг" value={profile.rating.toFixed(1)} />
+          <StatBlock label="Рейтинг" value={(profile.rating ?? 0).toFixed(1)} />
           <StatBlock label="Учеников" value={profile.totalStudents} />
           <StatBlock label="Занятий" value={profile.totalClasses} />
           <StatBlock
@@ -240,13 +240,13 @@ export default function TeacherProfilePage() {
       </div>
 
       {/* Classes by this teacher */}
-      {profile.classes.length > 0 && (
+      {(profile.classes || []).length > 0 && (
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-4">
             Занятия преподавателя
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {profile.classes.map((cls) => (
+            {(profile.classes || []).map((cls) => (
               <Link key={cls.id} href={`/classes/${cls.id}`}>
                 <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
                   <div className="aspect-video w-full bg-gray-100 relative">
@@ -276,7 +276,7 @@ export default function TeacherProfilePage() {
                       {cls.title}
                     </h3>
                     <p className="mt-2 text-base font-bold text-gray-900">
-                      от {cls.price.toLocaleString('ru-RU')} &#8381;
+                      от {(cls.price ?? 0).toLocaleString('ru-RU')} &#8381;
                     </p>
                   </div>
                 </Card>
@@ -287,13 +287,13 @@ export default function TeacherProfilePage() {
       )}
 
       {/* Reviews */}
-      {profile.reviews.length > 0 && (
+      {(profile.reviews || []).length > 0 && (
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-4">
             Отзывы
           </h2>
           <div className="space-y-4">
-            {profile.reviews.map((review) => (
+            {(profile.reviews || []).map((review) => (
               <Card key={review.id} className="p-5">
                 <div className="flex items-center justify-between">
                   <div>

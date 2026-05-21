@@ -42,8 +42,8 @@ export default function TeachersPage() {
     if (search) params.set('search', search);
     if (subject !== 'Все предметы') params.set('subject', subject);
 
-    apiFetch<{ data: TeacherItem[] }>(`/teachers?${params.toString()}`)
-      .then((res) => setTeachers(res.data))
+    apiFetch<{ items?: TeacherItem[]; data?: TeacherItem[] }>(`/teachers?${params.toString()}`)
+      .then((res) => setTeachers(res?.items || res?.data || []))
       .catch(() => setTeachers([]))
       .finally(() => setIsLoading(false));
   }, [search, subject]);

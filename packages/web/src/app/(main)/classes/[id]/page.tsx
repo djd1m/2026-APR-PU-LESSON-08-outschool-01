@@ -1,8 +1,7 @@
 import Link from 'next/link';
-import { apiFetch } from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
-import { TrialBookingCard } from '@/components/TrialBookingCard';
+import { Button } from '@/components/ui/Button';
 
 interface Section {
   id: string;
@@ -38,8 +37,9 @@ interface TeacherProfile {
   bio: string;
   user: {
     id: string;
-    firstName: string;
-    lastName: string;
+    name?: string;
+    firstName?: string;
+    lastName?: string;
     avatarUrl?: string;
   };
   _count?: {
@@ -148,7 +148,11 @@ export default async function ClassDetailPage({
     );
   }
 
-  const teacherName = cls.teacher?.user?.name || cls.teacherName || 'Преподаватель';
+  const teacherUser = cls.teacher?.user;
+  const teacherName = teacherUser?.name
+    || (teacherUser?.firstName ? `${teacherUser.firstName} ${teacherUser.lastName || ''}`.trim() : null)
+    || (cls as Record<string, unknown>).teacherName as string
+    || 'Преподаватель';
   const teacherInitial = teacherName.charAt(0) || '?';
   const teacherClassesCount = cls.teacher?.classesCount ?? cls.teacher?._count?.classes ?? 0;
 
@@ -193,9 +197,9 @@ export default async function ClassDetailPage({
             </h1>
 
             <div className="mt-2 flex items-center gap-4">
-              <StarRating rating={cls.avgRating} />
+              <StarRating rating={cls.avgRating ?? 0} />
               <span className="text-sm text-gray-500">
-                {cls.reviewCount} {cls.reviewCount === 1 ? 'отзыв' : cls.reviewCount < 5 ? 'отзыва' : 'отзывов'}
+                {cls.reviewCount ?? 0} {(cls.reviewCount ?? 0) === 1 ? 'отзыв' : (cls.reviewCount ?? 0) < 5 ? 'отзыва' : 'отзывов'}
               </span>
             </div>
           </div>
@@ -204,25 +208,25 @@ export default async function ClassDetailPage({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <Card className="p-4 text-center">
               <p className="text-2xl font-bold text-gray-900">
-                {cls.price.toLocaleString('ru-RU')} &#8381;
+                {(cls.price ?? 0).toLocaleString('ru-RU')} &#8381;
               </p>
               <p className="text-xs text-gray-500 mt-1">за занятие</p>
             </Card>
             <Card className="p-4 text-center">
               <p className="text-2xl font-bold text-gray-900">
-                {cls.ageMin}-{cls.ageMax}
+                {cls.ageMin ?? 0}-{cls.ageMax ?? 18}
               </p>
               <p className="text-xs text-gray-500 mt-1">лет</p>
             </Card>
             <Card className="p-4 text-center">
               <p className="text-2xl font-bold text-gray-900">
-                {cls.maxStudents}
+                {cls.maxStudents ?? 0}
               </p>
               <p className="text-xs text-gray-500 mt-1">макс. учеников</p>
             </Card>
             <Card className="p-4 text-center">
               <p className="text-2xl font-bold text-yellow-500">
-                {cls.avgRating.toFixed(1)}
+                {(cls.avgRating ?? 0).toFixed(1)}
               </p>
               <p className="text-xs text-gray-500 mt-1">рейтинг</p>
             </Card>
@@ -324,7 +328,7 @@ export default async function ClassDetailPage({
           {/* Reviews */}
           <div>
             <h2 className="text-xl font-semibold text-gray-900">
-              Отзывы ({cls.reviewCount})
+              Отзывы ({cls.reviewCount ?? 0})
             </h2>
             {(!cls.reviews || cls.reviews.length === 0) ? (
               <p className="mt-3 text-gray-500">Пока нет отзывов</p>
@@ -361,7 +365,7 @@ export default async function ClassDetailPage({
           {/* Booking card */}
           <Card className="sticky top-8 p-6">
             <p className="text-3xl font-bold text-gray-900">
-              от {cls.price.toLocaleString('ru-RU')} &#8381;
+              от {(cls.price ?? 0).toLocaleString('ru-RU')} &#8381;
             </p>
             <p className="text-sm text-gray-500">за занятие</p>
             <Button className="mt-6 w-full" size="lg">
