@@ -1,11 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { validateEnv } from './config/env.schema';
 
 async function bootstrap() {
+  // Validate ALL env vars at startup — crash immediately if missing
+  validateEnv();
+
   const app = await NestFactory.create(AppModule);
+
+  // Enable cookie parser for httpOnly token cookies
+  app.use(cookieParser());
 
   app.setGlobalPrefix('api/v1');
 

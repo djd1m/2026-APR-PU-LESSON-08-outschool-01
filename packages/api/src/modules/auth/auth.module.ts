@@ -9,9 +9,17 @@ import { LocalStrategy } from './strategies/local.strategy';
 @Module({
   imports: [
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET ?? 'change-me-in-production',
-      signOptions: { expiresIn: process.env.JWT_ACCESS_TTL ?? '15m' },
+    JwtModule.registerAsync({
+      useFactory: () => {
+        const secret = process.env.JWT_SECRET;
+        if (!secret || secret.length < 32) {
+          throw new Error('FATAL: JWT_SECRET must be set and at least 32 characters.');
+        }
+        return {
+          secret,
+          signOptions: { expiresIn: process.env.JWT_ACCESS_TTL ?? '15m' },
+        };
+      },
     }),
   ],
   controllers: [AuthController],

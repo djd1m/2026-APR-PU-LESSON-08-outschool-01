@@ -5,6 +5,7 @@ import {
   Param,
   Body,
   Query,
+  Req,
   UseGuards,
   ParseUUIDPipe,
 } from '@nestjs/common';
@@ -46,7 +47,15 @@ export class PaymentsController {
   @Post('webhook/yookassa')
   async yookassaWebhook(
     @Body() body: { object: { id: string; status: string } },
+    @Req() req: any,
   ) {
-    return this.paymentsService.handleWebhook(body.object.id, body.object.status);
+    const rawBody = JSON.stringify(req.body);
+    const signature = req.headers['x-yookassa-signature'] as string | undefined;
+    return this.paymentsService.handleWebhook(
+      rawBody,
+      signature,
+      body.object.id,
+      body.object.status,
+    );
   }
 }
