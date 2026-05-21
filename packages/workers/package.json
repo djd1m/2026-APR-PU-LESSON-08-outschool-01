@@ -1,0 +1,21 @@
+{
+  "name": "@klassmarket/workers",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "bullmq": "5.x",
+    "ioredis": "5.x",
+    "nodemailer": "6.x",
+    "@elastic/elasticsearch": "8.x"
+  },
+  "devDependencies": {
+    "typescript": "5.x",
+    "tsx": "4.x",
+    "@types/nodemailer": "6.x"
+  }
+}
