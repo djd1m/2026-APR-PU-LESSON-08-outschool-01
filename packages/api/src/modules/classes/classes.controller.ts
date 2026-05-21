@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Patch,
+  Put,
   Delete,
   Param,
   Body,
@@ -39,6 +39,13 @@ export class ClassesController {
     });
   }
 
+  @Get('my')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.TEACHER)
+  async findMyClasses(@CurrentUser('id') userId: string) {
+    return this.classesService.findByTeacher(userId);
+  }
+
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.classesService.findById(id);
@@ -59,7 +66,7 @@ export class ClassesController {
     return this.classesService.create(userId, dto);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.TEACHER)
   async update(
@@ -72,11 +79,38 @@ export class ClassesController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.TEACHER, UserRole.ADMIN)
+  @Roles(UserRole.TEACHER)
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser('id') userId: string,
   ) {
     return this.classesService.delete(id, userId);
+  }
+
+  @Post(':id/submit')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.TEACHER)
+  async submitForReview(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.classesService.submitForReview(userId, id);
+  }
+
+  @Post(':id/approve')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async approve(@Param('id', ParseUUIDPipe) id: string) {
+    return this.classesService.approve(id);
+  }
+
+  @Post(':id/reject')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async reject(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body('reason') reason: string,
+  ) {
+    return this.classesService.reject(id, reason);
   }
 }
