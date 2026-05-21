@@ -66,8 +66,12 @@ export default function RegisterPage() {
         refreshToken: result.refreshToken,
       });
 
-      // Redirect to onboarding (single page for all roles)
-      router.push('/onboarding');
+      // Redirect based on role
+      if (role === 'TEACHER') {
+        router.push('/teach/dashboard');
+      } else {
+        router.push('/onboarding');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ошибка регистрации');
     } finally {
