@@ -40,6 +40,14 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {user ? (
             <>
+              {user.role === 'teacher' && (
+                <Link
+                  href="/teach/classes"
+                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Управление занятиями
+                </Link>
+              )}
               <Link
                 href="/dashboard"
                 className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
