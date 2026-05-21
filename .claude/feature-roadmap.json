@@ -130,7 +130,7 @@
       "title": "Расписание секций",
       "description": "Timezone-aware расписание, конфликт-детекция, календарная интеграция",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E3",
       "stories": [
         "US-T03"
@@ -138,7 +138,9 @@
       "depends_on": [
         "class-creation"
       ],
-      "estimated_effort": "M"
+      "estimated_effort": "M",
+      "number": 8,
+      "branch": "feature/008-scheduling"
     },
     {
       "id": "video-classroom",
