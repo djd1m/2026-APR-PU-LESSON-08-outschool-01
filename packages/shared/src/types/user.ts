@@ -21,6 +21,7 @@ export interface Child {
   name: string;
   age: number;
   birthDate: Date;
+  interests: string[];
   parentId: string;
   avatarUrl?: string;
   createdAt: Date;

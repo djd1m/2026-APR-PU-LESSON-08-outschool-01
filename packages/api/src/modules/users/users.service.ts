@@ -40,4 +40,17 @@ export class UsersService {
     await this.findById(id);
     return this.usersRepository.delete(id);
   }
+
+  async createChild(parentId: string, data: { name: string; birthDate: string; interests: string[] }) {
+    await this.findById(parentId);
+    return this.usersRepository.createChild(parentId, {
+      name: data.name,
+      birthDate: new Date(data.birthDate),
+      interests: data.interests,
+    });
+  }
+
+  async getChildren(parentId: string) {
+    return this.usersRepository.findChildrenByParentId(parentId);
+  }
 }
