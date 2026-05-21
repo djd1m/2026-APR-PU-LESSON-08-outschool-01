@@ -95,7 +95,7 @@
       "title": "Бронирование пробного занятия",
       "description": "Бесплатное первое занятие без привязки карты, одноклик-запись",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E3",
       "stories": [
         "US-P05"
@@ -103,7 +103,9 @@
       "depends_on": [
         "class-catalog"
       ],
-      "estimated_effort": "M"
+      "estimated_effort": "M",
+      "number": 6,
+      "branch": "feature/006-trial-booking"
     },
     {
       "id": "payment-integration",
