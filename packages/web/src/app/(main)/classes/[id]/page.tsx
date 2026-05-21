@@ -112,7 +112,13 @@ function formatDateTime(dateStr: string): { date: string; time: string } {
 
 async function getClass(id: string): Promise<ClassDetail | null> {
   try {
-    return await apiFetch<ClassDetail>(`/classes/${id}`);
+    // Server-side: use localhost for internal API calls
+    const apiUrl = typeof window === 'undefined'
+      ? (process.env.API_INTERNAL_URL || 'http://localhost:4020')
+      : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4020');
+    const res = await fetch(`${apiUrl}/api/v1/classes/${id}`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    return await res.json();
   } catch {
     return null;
   }
@@ -142,11 +148,9 @@ export default async function ClassDetailPage({
     );
   }
 
-  const teacherName = cls.teacher?.user
-    ? `${cls.teacher.user.firstName} ${cls.teacher.user.lastName}`
-    : '';
+  const teacherName = cls.teacher?.user?.name || cls.teacherName || 'Преподаватель';
   const teacherInitial = teacherName.charAt(0) || '?';
-  const teacherClassesCount = cls.teacher?._count?.classes ?? 0;
+  const teacherClassesCount = cls.teacher?.classesCount ?? cls.teacher?._count?.classes ?? 0;
 
   return (
     <div className="container-page py-8">
@@ -173,7 +177,7 @@ export default async function ClassDetailPage({
             ) : (
               <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
                 <span className="text-white/60 text-6xl font-bold">
-                  {cls.subject.charAt(0)}
+                  {cls.subject?.charAt(0) || '?'}
                 </span>
               </div>
             )}
