@@ -3,7 +3,7 @@
 **Project:** КлассМаркет (EdTech marketplace for live online children's classes)
 **Date:** 2026-05-21
 **Stack:** NestJS + Next.js (App Router) + PostgreSQL + Prisma + Redis + BullMQ + Elasticsearch + Jitsi Meet + MinIO + Docker
-**Artifacts found:** 38
+**Artifacts found:** 48
 
 ---
 
@@ -31,6 +31,12 @@
 
 - [x] #P11: Content Moderation Lifecycle — Class goes through DRAFT → PENDING_REVIEW → PUBLISHED/DRAFT(rejected). Teacher submits for review, admin approves/rejects with reason. Published classes auto-index in Elasticsearch. Re-editing a published class resets to DRAFT. | Source: `packages/api/src/modules/classes/classes.service.ts:216-283` | Maturity: 🟡 Beta
 
+- [x] #P12: Mock API Pattern (pure Node.js HTTP) — Zero-dependency mock API server using only `http` and `url` modules. In-memory stores for users, children, enrollments. Supports CRUD + auth + webhook simulation. Perfect for frontend development without backend. | Source: `/tmp/km-api.js` | Maturity: 🔴 Alpha
+
+- [x] #P13: EnrollmentCard UX Pattern — Client component with child selector + section picker + trial/paid booking buttons. Shows contextual messages: "add child first" (amber), "select time" hints, "Войти в класс" after success. Progressive disclosure. | Source: `packages/web/src/app/(main)/classes/[id]/EnrollmentCard.tsx` | Maturity: 🔴 Alpha
+
+- [x] #P14: Server Component + Client Island — Server component fetches data via localhost (internal), passes to client component for interactivity. Avoids CORS/external URL issues in SSR. Pattern: `fetch('http://localhost:PORT/api')` in server, `apiFetch` in client. | Source: `packages/web/src/app/(main)/classes/[id]/page.tsx` | Maturity: 🔴 Alpha
+
 ---
 
 ## Правила
@@ -51,6 +57,16 @@
 
 - [x] #R8: Webhook handlers must be idempotent — Check terminal state (`COMPLETED`, `REFUNDED`) before processing. Return `{ received: true }` for duplicates to prevent gateway retries. | Source: `packages/api/src/modules/payments/payments.service.ts:170-173`
 
+- [x] #R9: Mock API resets on restart — In-memory mock APIs lose state on process restart. Users must re-add data (children, enrollments). Pre-seed critical test data in mock startup. | Source: `/tmp/km-api.js`
+
+- [x] #R10: NEXT_PUBLIC env vars need restart — Next.js inlines NEXT_PUBLIC_ vars at build/start time. Changing .env without restarting dev server has no effect on client code. | Source: debug session
+
+- [x] #R11: useCallback + Date object = infinite loop — `useCallback` with `new Date()` in deps creates new object each render → callback recreates → useEffect refires → infinite loop. Fix: depend on `.getTime()` (stable number). | Source: `packages/web/src/app/(main)/teach/schedule/page.tsx`
+
+- [x] #R12: Server components fetch via localhost, not external IP — Next.js server components run on the server. `fetch('http://external-ip:port')` may fail (firewall, DNS). Always use `http://localhost:PORT` for internal API calls in server components. | Source: debug session
+
+- [x] #R13: Register must restrict role to PARENT|TEACHER — Never allow role: ADMIN in registration DTO. ADMIN accounts created manually or via seed. Privilege escalation vector if not restricted. | Source: `packages/api/src/modules/auth/dto/register.dto.ts`
+
 ---
 
 ## Шаблоны
@@ -70,6 +86,8 @@
 - [x] #T7: Standardized API Response Envelope — `{ success: boolean, data: T, error?: { code, message }, meta?: { page, perPage, total, totalPages } }`. Enforced by `TransformInterceptor` (wraps success) and `HttpExceptionFilter` (wraps errors). | Source: `packages/api/src/common/interceptors/transform.interceptor.ts`, `packages/api/src/common/filters/http-exception.filter.ts`, `packages/shared/src/types/api.ts`
 
 - [x] #T8: PrismaService Lifecycle Wrapper — Extends `PrismaClient`, implements `OnModuleInit` (connect) and `OnModuleDestroy` (disconnect). Injectable NestJS service. | Source: `packages/api/src/prisma/prisma.service.ts`
+
+- [x] #T9: Feature SPARC docs template (7 files per feature) — 01_specification.md, 02_pseudocode.md, 03_architecture.md, 04_refinement.md, 05_completion.md, validation-report.md, review-report.md + README.md | Source: `docs/features/auth-registration/` | Maturity: 🟢 Production
 
 ---
 
