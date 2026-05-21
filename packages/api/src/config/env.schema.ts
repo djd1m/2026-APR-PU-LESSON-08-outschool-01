@@ -31,6 +31,11 @@ export const envSchema = z.object({
   S3_BUCKET: z.string().default('klassmarket'),
   S3_ACCESS_KEY: z.string().optional(),
   S3_SECRET_KEY: z.string().optional(),
+
+  // Jitsi Meet
+  JITSI_DOMAIN: z.string().default('meet.jit.si'),
+  JITSI_APP_ID: z.string().default('klassmarket'),
+  JITSI_SECRET: z.string().min(32).optional(),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
