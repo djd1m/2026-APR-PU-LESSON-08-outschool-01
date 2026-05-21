@@ -2,41 +2,63 @@
 
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { storeTokens } from '@/lib/auth';
+import { apiFetch } from '@/lib/api';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    searchParams.get('error') === 'oauth_failed'
+      ? 'Ошибка авторизации через внешний сервис'
+      : null,
+  );
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
+    // Client-side validation
+    if (!email.trim()) {
+      setError('Введите email');
+      setIsLoading(false);
+      return;
+    }
+    if (password.length < 8) {
+      setError('Пароль должен содержать минимум 8 символов');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/auth/login`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        },
-      );
+      const result = await apiFetch<{
+        accessToken: string;
+        refreshToken: string;
+        user: { id: string; email: string; name: string; role: string };
+      }>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error(body?.message || 'Неверный email или пароль');
-      }
+      storeTokens({
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      });
 
-      const { accessToken, refreshToken } = await res.json();
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      window.location.href = '/dashboard';
+      router.push('/classes');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ошибка входа');
+      setError(
+        err instanceof Error ? err.message : 'Неверный email или пароль',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -73,6 +95,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
+              autoComplete="email"
             />
             <Input
               label="Пароль"
@@ -81,6 +104,8 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="********"
               required
+              minLength={8}
+              autoComplete="current-password"
             />
           </div>
 
@@ -100,20 +125,20 @@ export default function LoginPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
+            <a
+              href={`${API_URL}/auth/vk`}
               className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <span className="text-blue-600 font-bold">VK</span>
               VK ID
-            </button>
-            <button
-              type="button"
+            </a>
+            <a
+              href={`${API_URL}/auth/yandex`}
               className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <span className="text-red-500 font-bold">Я</span>
               Яндекс ID
-            </button>
+            </a>
           </div>
         </form>
       </div>
