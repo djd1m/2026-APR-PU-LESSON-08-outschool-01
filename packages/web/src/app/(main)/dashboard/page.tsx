@@ -245,17 +245,18 @@ export default function DashboardPage() {
 
             {children.map((child, idx) => (
               <Card key={`${child.id}-${idx}`} className="p-5">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-lg font-bold text-primary-700">
-                    {(child.name || '?').charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-lg font-semibold text-gray-900">{child.name}</p>
-                    {child.birthDate && (
-                      <p className="text-sm text-gray-500">
-                        Дата рождения: {new Date(child.birthDate).toLocaleDateString('ru-RU')}
-                      </p>
-                    )}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-lg font-bold text-primary-700">
+                      {(child.name || '?').charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-lg font-semibold text-gray-900">{child.name}</p>
+                      {child.birthDate && (
+                        <p className="text-sm text-gray-500">
+                          Дата рождения: {new Date(child.birthDate).toLocaleDateString('ru-RU')}
+                        </p>
+                      )}
                     {child.interests && child.interests.length > 0 && (
                       <div className="mt-1 flex flex-wrap gap-1">
                         {child.interests.map((interest) => (
@@ -265,7 +266,20 @@ export default function DashboardPage() {
                         ))}
                       </div>
                     )}
+                    </div>
                   </div>
+                  <button
+                    onClick={async () => {
+                      if (!confirm(`Удалить ${child.name}?`)) return;
+                      try {
+                        await apiFetch(`/users/children/${child.id}`, { method: 'DELETE' });
+                        setChildren(prev => prev.filter(c => c.id !== child.id));
+                      } catch { alert('Ошибка удаления'); }
+                    }}
+                    className="text-sm text-red-400 hover:text-red-600 transition-colors"
+                  >
+                    Удалить
+                  </button>
                 </div>
               </Card>
             ))}
