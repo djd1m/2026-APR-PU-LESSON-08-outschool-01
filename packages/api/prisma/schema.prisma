@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  PARENT
+  TEACHER
+  CHILD
+  ADMIN
+}
+
+enum ClassStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum SectionStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum EnrollmentStatus {
+  PENDING
+  CONFIRMED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  REFUNDED
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  passwordHash   String          @map("password_hash")
+  name           String
+  role           UserRole        @default(PARENT)
+  avatarUrl      String?         @map("avatar_url")
+  phone          String?
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  children       Child[]
+  teacherProfile TeacherProfile?
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model Child {
+  id          String       @id @default(uuid())
+  name        String
+  birthDate   DateTime     @map("birth_date")
+  avatarUrl   String?      @map("avatar_url")
+  parentId    String       @map("parent_id")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  parent      User         @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  enrollments Enrollment[]
+  achievements Achievement[]
+
+  @@index([parentId])
+  @@map("children")
+}
+
+model TeacherProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique @map("user_id")
+  bio         String   @default("")
+  education   String   @default("")
+  subjects    String[] @default([])
+  rating      Decimal  @default(0) @db.Decimal(3, 2)
+  reviewCount Int      @default(0) @map("review_count")
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classes Class[]
+
+  @@map("teacher_profiles")
+}
+
+model Class {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  subject     String
+  price       Decimal     @db.Decimal(10, 2)
+  ageMin      Int         @map("age_min")
+  ageMax      Int         @map("age_max")
+  maxStudents Int         @default(12) @map("max_students")
+  teacherId   String      @map("teacher_id")
+  status      ClassStatus @default(DRAFT)
+  slug        String      @unique
+  imageUrl    String?     @map("image_url")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  teacher  TeacherProfile @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  sections Section[]
+
+  @@index([teacherId])
+  @@index([status])
+  @@index([subject])
+  @@index([slug])
+  @@map("classes")
+}
+
+model Section {
+  id            String        @id @default(uuid())
+  classId       String        @map("class_id")
+  startTime     DateTime      @map("start_time")
+  endTime       DateTime      @map("end_time")
+  status        SectionStatus @default(SCHEDULED)
+  maxStudents   Int           @default(12) @map("max_students")
+  enrolledCount Int           @default(0) @map("enrolled_count")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+  enrollments Enrollment[]
+
+  @@index([classId])
+  @@index([startTime])
+  @@map("sections")
+}
+
+model Enrollment {
+  id          String           @id @default(uuid())
+  childId     String           @map("child_id")
+  sectionId   String           @map("section_id")
+  status      EnrollmentStatus @default(PENDING)
+  enrolledAt  DateTime         @default(now()) @map("enrolled_at")
+  completedAt DateTime?        @map("completed_at")
+  cancelledAt DateTime?        @map("cancelled_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  child   Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  section Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  payment Payment?
+  review  Review?
+
+  @@unique([childId, sectionId])
+  @@index([childId])
+  @@index([sectionId])
+  @@index([status])
+  @@map("enrollments")
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  enrollmentId  String        @unique @map("enrollment_id")
+  amount        Decimal       @db.Decimal(10, 2)
+  commission    Decimal       @db.Decimal(10, 2)
+  teacherPayout Decimal       @db.Decimal(10, 2) @map("teacher_payout")
+  status        PaymentStatus @default(PENDING)
+  yookassaId    String?       @unique @map("yookassa_id")
+  paidAt        DateTime?     @map("paid_at")
+  refundedAt    DateTime?     @map("refunded_at")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([yookassaId])
+  @@map("payments")
+}
+
+model Review {
+  id           String   @id @default(uuid())
+  enrollmentId String   @unique @map("enrollment_id")
+  rating       Int      @db.SmallInt
+  comment      String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@index([rating])
+  @@map("reviews")
+}
+
+model Achievement {
+  id        String   @id @default(uuid())
+  childId   String   @map("child_id")
+  type      String
+  xp        Int      @default(0)
+  badge     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  child Child @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  @@index([childId])
+  @@index([type])
+  @@map("achievements")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([read])
+  @@map("notifications")
+}
