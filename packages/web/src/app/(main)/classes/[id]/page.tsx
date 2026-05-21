@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { EnrollmentCard } from './EnrollmentCard';
 
 interface Section {
   id: string;
@@ -364,18 +365,11 @@ export default async function ClassDetailPage({
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Booking card */}
-          <Card className="sticky top-8 p-6">
-            <p className="text-3xl font-bold text-gray-900">
-              от {(cls.price ?? 0).toLocaleString('ru-RU')} &#8381;
-            </p>
-            <p className="text-sm text-gray-500">за занятие</p>
-            <Button className="mt-6 w-full" size="lg">
-              Записаться
-            </Button>
-            <p className="mt-3 text-center text-xs text-gray-400">
-              Бесплатная отмена за 24 часа
-            </p>
-          </Card>
+          <EnrollmentCard
+            classId={cls.id}
+            price={cls.price ?? 0}
+            sections={(cls.sections || []).filter((s: any) => s.status === 'SCHEDULED')}
+          />
 
           {/* Teacher card */}
           <Card className="p-6">
