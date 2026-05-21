@@ -2,17 +2,20 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { apiFetch } from '@/lib/api';
-import { clearTokens, isAuthenticated } from '@/lib/auth';
+import { clearTokens, storeTokens, isAuthenticated } from '@/lib/auth';
 
 interface User {
   id: string;
   name: string;
   email: string;
-  role: 'parent' | 'teacher' | 'admin';
+  role: 'PARENT' | 'TEACHER' | 'CHILD' | 'ADMIN';
+  avatarUrl?: string;
+  phone?: string;
 }
 
 interface UseAuthReturn {
   user: User | null;
+  isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -31,7 +34,7 @@ export function useAuth(): UseAuthReturn {
     }
 
     setIsLoading(true);
-    apiFetch<User>('/users/me')
+    apiFetch<User>('/auth/me')
       .then(setUser)
       .catch(() => {
         clearTokens();
@@ -55,8 +58,10 @@ export function useAuth(): UseAuthReturn {
         body: JSON.stringify({ email, password }),
       });
 
-      localStorage.setItem('accessToken', res.accessToken);
-      localStorage.setItem('refreshToken', res.refreshToken);
+      storeTokens({
+        accessToken: res.accessToken,
+        refreshToken: res.refreshToken,
+      });
       setUser(res.user);
     },
     [],
@@ -68,5 +73,12 @@ export function useAuth(): UseAuthReturn {
     window.location.href = '/';
   }, []);
 
-  return { user, isLoading, login, logout, refetch: fetchUser };
+  return {
+    user,
+    isAuthenticated: user !== null,
+    isLoading,
+    login,
+    logout,
+    refetch: fetchUser,
+  };
 }
