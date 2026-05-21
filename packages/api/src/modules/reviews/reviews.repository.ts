@@ -36,7 +36,23 @@ export class ReviewsRepository {
         take,
         where,
         orderBy: { createdAt: 'desc' },
-        include: { enrollment: { include: { child: true } } },
+        include: { enrollment: { include: { child: true, section: { include: { class: true } } } } },
+      }),
+      this.prisma.review.count({ where }),
+    ]);
+    return { items, total };
+  }
+
+  async findFlagged(params: { skip?: number; take?: number }) {
+    const { skip = 0, take = 20 } = params;
+    const where: Prisma.ReviewWhereInput = { flagged: true };
+    const [items, total] = await Promise.all([
+      this.prisma.review.findMany({
+        skip,
+        take,
+        where,
+        orderBy: { createdAt: 'desc' },
+        include: { enrollment: { include: { child: true, section: { include: { class: true } } } } },
       }),
       this.prisma.review.count({ where }),
     ]);
@@ -45,6 +61,14 @@ export class ReviewsRepository {
 
   async delete(id: string) {
     return this.prisma.review.delete({ where: { id } });
+  }
+
+  async update(id: string, data: Prisma.ReviewUpdateInput) {
+    return this.prisma.review.update({
+      where: { id },
+      data,
+      include: { enrollment: { include: { child: true } } },
+    });
   }
 
   async getAverageRatingForTeacher(teacherId: string) {

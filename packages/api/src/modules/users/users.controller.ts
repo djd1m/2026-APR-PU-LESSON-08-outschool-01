@@ -26,6 +26,17 @@ export class UsersController {
     return this.usersService.findById(userId);
   }
 
+  @Get('dashboard')
+  async getDashboard(@CurrentUser('id') userId: string) {
+    return this.usersService.getParentDashboard(userId);
+  }
+
+  @Get('teacher/dashboard')
+  @Roles(UserRole.TEACHER)
+  async getTeacherDashboard(@CurrentUser('id') userId: string) {
+    return this.usersService.getTeacherDashboard(userId);
+  }
+
   @Get()
   @Roles(UserRole.ADMIN)
   async findAll(

@@ -3,6 +3,8 @@ import { apiFetch } from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { ReviewCard } from '@/components/ReviewCard';
+import { ClassDetailReviewSection } from './ClassDetailReviewSection';
 
 interface ClassDetail {
   id: string;
@@ -153,30 +155,11 @@ export default async function ClassDetailPage({
             </p>
           </div>
 
-          {/* Reviews */}
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900">Отзывы</h2>
-            {cls.reviews.length === 0 ? (
-              <p className="mt-3 text-gray-500">Пока нет отзывов</p>
-            ) : (
-              <div className="mt-4 space-y-4">
-                {cls.reviews.map((review) => (
-                  <Card key={review.id} className="p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-gray-900">
-                        {review.authorName}
-                      </span>
-                      <StarRating rating={review.rating} />
-                    </div>
-                    <p className="mt-2 text-sm text-gray-600">{review.text}</p>
-                    <p className="mt-2 text-xs text-gray-400">
-                      {new Date(review.createdAt).toLocaleDateString('ru-RU')}
-                    </p>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Reviews section with form */}
+          <ClassDetailReviewSection
+            classId={cls.id}
+            reviews={cls.reviews}
+          />
         </div>
 
         {/* Sidebar */}
