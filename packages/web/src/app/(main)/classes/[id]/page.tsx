@@ -1,8 +1,16 @@
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { TrialBookingCard } from '@/components/TrialBookingCard';
+
+interface Section {
+  id: string;
+  startTime: string;
+  endTime: string;
+  maxStudents: number;
+  enrolledCount: number;
+}
 
 interface SectionItem {
   id: string;

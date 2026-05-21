@@ -2,6 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 
+const enrollmentInclude = {
+  child: true,
+  section: {
+    include: {
+      class: {
+        include: {
+          teacher: {
+            include: {
+              user: { select: { name: true, avatarUrl: true } },
+            },
+          },
+        },
+      },
+    },
+  },
+} satisfies Prisma.EnrollmentInclude;
+
 @Injectable()
 export class EnrollmentsRepository {
   constructor(private prisma: PrismaService) {}
@@ -9,7 +26,7 @@ export class EnrollmentsRepository {
   async create(data: Prisma.EnrollmentCreateInput) {
     return this.prisma.enrollment.create({
       data,
-      include: { child: true, section: { include: { class: true } } },
+      include: enrollmentInclude,
     });
   }
 
@@ -17,8 +34,7 @@ export class EnrollmentsRepository {
     return this.prisma.enrollment.findUnique({
       where: { id },
       include: {
-        child: true,
-        section: { include: { class: true } },
+        ...enrollmentInclude,
         payment: true,
       },
     });
@@ -27,6 +43,33 @@ export class EnrollmentsRepository {
   async findByChildAndSection(childId: string, sectionId: string) {
     return this.prisma.enrollment.findUnique({
       where: { childId_sectionId: { childId, sectionId } },
+    });
+  }
+
+  /**
+   * Check if a child already has a trial enrollment for any section of this class.
+   */
+  async hasTrialForClass(childId: string, classId: string): Promise<boolean> {
+    const count = await this.prisma.enrollment.count({
+      where: {
+        childId,
+        isTrial: true,
+        status: { not: 'CANCELLED' },
+        section: { classId },
+      },
+    });
+    return count > 0;
+  }
+
+  /**
+   * Count active (non-cancelled) enrollments for a section.
+   */
+  async countBySectionId(sectionId: string): Promise<number> {
+    return this.prisma.enrollment.count({
+      where: {
+        sectionId,
+        status: { not: 'CANCELLED' },
+      },
     });
   }
 
@@ -42,7 +85,7 @@ export class EnrollmentsRepository {
         take,
         where,
         orderBy: { createdAt: 'desc' },
-        include: { child: true, section: { include: { class: true } } },
+        include: enrollmentInclude,
       }),
       this.prisma.enrollment.count({ where }),
     ]);

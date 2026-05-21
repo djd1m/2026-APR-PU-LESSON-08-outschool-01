@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Patch,
+  Delete,
   Param,
   Body,
   Query,
@@ -12,19 +12,38 @@ import {
 import { EnrollmentsService } from './enrollments.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 
 @Controller('enrollments')
 @UseGuards(JwtAuthGuard)
 export class EnrollmentsController {
   constructor(private enrollmentsService: EnrollmentsService) {}
 
-  @Post()
-  async create(
-    @Body() body: { childId: string; sectionId: string },
+  /**
+   * POST /enrollments/trial — book free trial (no payment, one per child per class)
+   */
+  @Post('trial')
+  async createTrial(
+    @CurrentUser('id') userId: string,
+    @Body() dto: CreateEnrollmentDto,
   ) {
-    return this.enrollmentsService.create(body.childId, body.sectionId);
+    return this.enrollmentsService.createTrial(userId, dto.childId, dto.sectionId);
   }
 
+  /**
+   * POST /enrollments — book paid enrollment
+   */
+  @Post()
+  async create(
+    @CurrentUser('id') userId: string,
+    @Body() dto: CreateEnrollmentDto,
+  ) {
+    return this.enrollmentsService.create(userId, dto.childId, dto.sectionId);
+  }
+
+  /**
+   * GET /enrollments — list parent's enrollments (with class+section info)
+   */
   @Get()
   async findMyEnrollments(
     @CurrentUser('id') userId: string,
@@ -38,6 +57,21 @@ export class EnrollmentsController {
     );
   }
 
+  /**
+   * GET /enrollments/trial-status?childId=...&classId=...
+   * Check if trial was already used for a child+class combination.
+   */
+  @Get('trial-status')
+  async trialStatus(
+    @Query('childId', ParseUUIDPipe) childId: string,
+    @Query('classId', ParseUUIDPipe) classId: string,
+  ) {
+    return this.enrollmentsService.getTrialStatus(childId, classId);
+  }
+
+  /**
+   * GET /enrollments/:id — enrollment details
+   */
   @Get(':id')
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
