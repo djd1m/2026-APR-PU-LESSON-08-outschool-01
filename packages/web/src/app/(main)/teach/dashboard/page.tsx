@@ -172,13 +172,13 @@ export default function TeacherDashboardPage() {
               <h2 className="text-xl font-semibold text-gray-900">
                 Ближайшие занятия
               </h2>
-              {data.upcomingSections.length === 0 ? (
+              {(data.upcomingSections || []).length === 0 ? (
                 <Card className="mt-4 p-6 text-center">
                   <p className="text-gray-500">Нет запланированных занятий</p>
                 </Card>
               ) : (
                 <div className="mt-4 space-y-3">
-                  {data.upcomingSections.map((section) => (
+                  {(data.upcomingSections || []).map((section) => (
                     <Card key={section.sectionId} className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -214,13 +214,13 @@ export default function TeacherDashboardPage() {
               <h2 className="text-xl font-semibold text-gray-900">
                 Последние отзывы
               </h2>
-              {data.recentReviews.length === 0 ? (
+              {(data.recentReviews || []).length === 0 ? (
                 <Card className="mt-4 p-6 text-center">
                   <p className="text-gray-500">Пока нет отзывов</p>
                 </Card>
               ) : (
                 <div className="mt-4 space-y-3">
-                  {data.recentReviews.map((review) => (
+                  {(data.recentReviews || []).map((review) => (
                     <Card key={review.id} className="p-4">
                       <div className="flex items-center justify-between">
                         <span className="font-medium text-gray-900">
