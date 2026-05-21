@@ -18,17 +18,59 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { UserRole } from '@klassmarket/shared';
 import { CreateChildDto } from './dto/create-child.dto';
 
-@Controller('users')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@Controller()
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get('me')
+  // --- Teacher profile endpoints (public + authenticated) ---
+
+  @Get('teachers')
+  async getTeachers(
+    @Query('page') page?: string,
+    @Query('perPage') perPage?: string,
+    @Query('subject') subject?: string,
+    @Query('search') search?: string,
+  ) {
+    return this.usersService.getTeachers({
+      page: page ? parseInt(page, 10) : 1,
+      perPage: perPage ? parseInt(perPage, 10) : 20,
+      subject,
+      search,
+    });
+  }
+
+  @Get('teachers/:id')
+  async getTeacherProfile(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usersService.getTeacherProfile(id);
+  }
+
+  @Put('teachers/me')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.TEACHER)
+  async updateTeacherProfile(
+    @CurrentUser('id') userId: string,
+    @Body() dto: UpdateTeacherDto,
+  ) {
+    return this.usersService.updateTeacherProfile(userId, dto);
+  }
+
+  @Post('teachers/me/verify')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.TEACHER)
+  async submitVerification(@CurrentUser('id') userId: string) {
+    return this.usersService.submitVerification(userId);
+  }
+
+  // --- Existing user endpoints ---
+
+  @Get('users/me')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async getMe(@CurrentUser('id') userId: string) {
     return this.usersService.findById(userId);
   }
 
-  @Get()
+  @Get('users')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async findAll(
     @Query('page') page?: string,
@@ -58,7 +100,8 @@ export class UsersController {
     return this.usersService.findById(id);
   }
 
-  @Patch('me')
+  @Patch('users/me')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async updateMe(
     @CurrentUser('id') userId: string,
     @Body() body: { name?: string; phone?: string; avatarUrl?: string },
@@ -66,7 +109,8 @@ export class UsersController {
     return this.usersService.update(userId, body);
   }
 
-  @Delete(':id')
+  @Delete('users/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.delete(id);
