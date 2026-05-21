@@ -42,8 +42,21 @@ export default function TeachersPage() {
     if (search) params.set('search', search);
     if (subject !== 'Все предметы') params.set('subject', subject);
 
-    apiFetch<{ items?: TeacherItem[]; data?: TeacherItem[] }>(`/teachers?${params.toString()}`)
-      .then((res) => setTeachers(res?.items || res?.data || []))
+    apiFetch<{ items?: any[]; data?: any[] }>(`/teachers?${params.toString()}`)
+      .then((res) => {
+        const raw = res?.items || res?.data || [];
+        // Normalize: API may return user.name instead of name at top level
+        setTeachers(raw.map((t: any) => ({
+          ...t,
+          name: t.name || t.user?.name || 'Преподаватель',
+          avatarUrl: t.avatarUrl || t.user?.avatarUrl || null,
+          subjects: t.subjects || [],
+          rating: t.rating ?? 0,
+          reviewCount: t.reviewCount ?? 0,
+          classesCount: t.classesCount ?? 0,
+          verified: t.verified ?? false,
+        })));
+      })
       .catch(() => setTeachers([]))
       .finally(() => setIsLoading(false));
   }, [search, subject]);
