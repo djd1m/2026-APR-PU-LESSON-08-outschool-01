@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "^8.12.0",
-    "@klassmarket/shared": "workspace:*",
+    "@klassmarket/shared": "*",
     "@nestjs/common": "^10.3.0",
     "@nestjs/core": "^10.3.0",
     "@nestjs/jwt": "^10.2.0",
