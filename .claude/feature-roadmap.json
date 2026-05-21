@@ -5,10 +5,12 @@
   "features": [
     {
       "id": "auth-registration",
+      "number": 1,
       "title": "Аутентификация и регистрация",
       "description": "VK ID, Яндекс ID, email/password регистрация и вход для родителей и учителей",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
+      "branch": "feature/001-auth-registration",
       "epic": "E1",
       "stories": ["US-P01", "US-T01"],
       "depends_on": [],
