@@ -2,6 +2,20 @@
 
 ---
 
+## 2026-05-21 — Firefox прокси блокирует нестандартные порты, Chrome работает
+
+**Tags:** browser, proxy, firefox, ports, deployment
+
+**Problem:**
+Firefox с настройками "использовать системный прокси" блокирует подключение к нестандартным портам (3020, 8030) на VPS. Curl с сервера возвращает 200, но браузер показывает "Прокси-сервер отказывается принимать соединения". Chrome подключается без проблем.
+
+**Solution:**
+Это настройка прокси в Firefox (about:preferences → Network Settings). Для обхода: использовать Chrome, или в Firefox выбрать "No proxy" / добавить IP сервера в исключения.
+
+**References:** deployment log
+
+---
+
 ## 2026-05-21 — Phase 4 REVIEW выявил критические проблемы: 40-50% спеки не реализовано, privilege escalation
 
 **Tags:** brutal-honesty-review, phase-4, security, implementation-gap, blocker
