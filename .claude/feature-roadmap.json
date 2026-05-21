@@ -112,7 +112,7 @@
       "title": "Оплата через ЮKassa",
       "description": "Приём платежей, автоматический сплит комиссии 22%, выплаты учителям, возвраты",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E3",
       "stories": [
         "US-P06",
@@ -121,7 +121,9 @@
       "depends_on": [
         "trial-booking"
       ],
-      "estimated_effort": "XL"
+      "estimated_effort": "XL",
+      "number": 7,
+      "branch": "feature/007-payment-integration"
     },
     {
       "id": "scheduling",
