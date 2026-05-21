@@ -31,10 +31,12 @@
     },
     {
       "id": "class-catalog",
+      "number": 3,
       "title": "Каталог классов с поиском",
       "description": "Каталог с фильтрами (возраст, предмет, цена, расписание), полнотекстовый поиск Elasticsearch",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
+      "branch": "feature/003-class-catalog",
       "epic": "E2",
       "stories": ["US-P03", "US-P04"],
       "depends_on": ["auth-registration"],
