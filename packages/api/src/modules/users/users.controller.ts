@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Post,
   Patch,
   Delete,
   Param,
@@ -15,6 +16,7 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { UserRole } from '@klassmarket/shared';
+import { CreateChildDto } from './dto/create-child.dto';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -36,6 +38,19 @@ export class UsersController {
       page ? parseInt(page, 10) : 1,
       perPage ? parseInt(perPage, 10) : 20,
     );
+  }
+
+  @Post('children')
+  async createChild(
+    @CurrentUser('id') userId: string,
+    @Body() dto: CreateChildDto,
+  ) {
+    return this.usersService.createChild(userId, dto);
+  }
+
+  @Get('children')
+  async getChildren(@CurrentUser('id') userId: string) {
+    return this.usersService.getChildren(userId);
   }
 
   @Get(':id')

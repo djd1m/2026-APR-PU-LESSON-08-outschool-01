@@ -37,4 +37,22 @@ export class UsersRepository {
   async delete(id: string) {
     return this.prisma.user.delete({ where: { id } });
   }
+
+  async createChild(parentId: string, data: { name: string; birthDate: Date; interests: string[] }) {
+    return this.prisma.child.create({
+      data: {
+        name: data.name,
+        birthDate: data.birthDate,
+        interests: data.interests,
+        parentId,
+      },
+    });
+  }
+
+  async findChildrenByParentId(parentId: string) {
+    return this.prisma.child.findMany({
+      where: { parentId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }
