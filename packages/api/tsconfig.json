@@ -2,9 +2,12 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "paths": {
+      "@klassmarket/shared": ["../shared/dist"],
+      "@klassmarket/shared/*": ["../shared/dist/*"]
+    }
   },
   "include": ["src/**/*"]
 }
