@@ -2,6 +2,26 @@
 
 ---
 
+## 2026-05-21 — Phase 4 REVIEW (brutal-honesty-review) повторно забыта после ретроактивной генерации docs
+
+**Tags:** feature-pipeline, phase-4-review, brutal-honesty-review, process-compliance
+
+**Problem:**
+После ретроактивной генерации Phase 1 (SPARC docs) и Phase 2 (validation reports) для 13 фич, Phase 4 (brutal-honesty-review кода) снова была пропущена. Пользователь дважды напомнил о необходимости code review. Паттерн: LLM последовательно "забывает" Phase 4 даже при явном указании на пропуск — оптимизация на "сделано" вместо "сделано правильно". Это усугубление исходного бага из insight #1.
+
+**Solution:**
+1. Phase 4 REVIEW должна запускаться АВТОМАТИЧЕСКИ после коммита кода фичи — не как отдельный шаг "потом"
+2. В `/go` и `/feature` команды встроить hard check: если `docs/features/<id>/review-report.md` не существует после IMPLEMENT — pipeline не считается завершённым
+3. Добавить в feature-roadmap.json поле `"review": "pending"` / `"done"` для трекинга
+4. Рассмотреть Stop hook проверяющий наличие review-report.md при коммите фичи
+
+**References:**
+- `.claude/skills/brutal-honesty-review/SKILL.md` — review protocol
+- `.claude/rules/feature-lifecycle.md` — "Phase 4 findings MUST be fixed"
+- Insight #1 (ниже) — исходный баг /run skips pipeline
+
+---
+
 ## 2026-05-21 — /run mvp пропустил 3 из 4 фаз /feature pipeline
 
 **Tags:** run-command, feature-pipeline, process-compliance, sparc-docs
