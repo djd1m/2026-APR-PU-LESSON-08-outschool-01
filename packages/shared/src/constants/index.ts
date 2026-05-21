@@ -16,6 +16,9 @@ export const MIN_AGE = 3;
 /** Maximum student age */
 export const MAX_AGE = 18;
 
+/** Minimum withdrawal amount in RUB */
+export const MIN_WITHDRAW_AMOUNT = 1000;
+
 /** JWT access token TTL */
 export const JWT_ACCESS_TTL = '15m';
 
