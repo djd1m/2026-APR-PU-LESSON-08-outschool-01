@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ClassesService } from './classes.service';
 import { CreateClassDto } from './dto/create-class.dto';
+import { ClassFilterDto } from './dto/class-filter.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -22,21 +23,37 @@ import { UserRole } from '@klassmarket/shared';
 export class ClassesController {
   constructor(private classesService: ClassesService) {}
 
+  @Get('subjects')
+  async getSubjects() {
+    return this.classesService.getSubjects();
+  }
+
   @Get()
   async findAll(
     @Query('page') page?: string,
-    @Query('perPage') perPage?: string,
+    @Query('limit') limit?: string,
     @Query('subject') subject?: string,
     @Query('ageMin') ageMin?: string,
     @Query('ageMax') ageMax?: string,
+    @Query('priceMin') priceMin?: string,
+    @Query('priceMax') priceMax?: string,
+    @Query('query') query?: string,
+    @Query('sort') sort?: string,
+    @Query('cursor') cursor?: string,
   ) {
-    return this.classesService.findAll({
+    const filters: ClassFilterDto = {
       page: page ? parseInt(page, 10) : undefined,
-      perPage: perPage ? parseInt(perPage, 10) : undefined,
-      subject,
+      limit: limit ? parseInt(limit, 10) : undefined,
+      subject: subject || undefined,
       ageMin: ageMin ? parseInt(ageMin, 10) : undefined,
       ageMax: ageMax ? parseInt(ageMax, 10) : undefined,
-    });
+      priceMin: priceMin ? parseInt(priceMin, 10) : undefined,
+      priceMax: priceMax ? parseInt(priceMax, 10) : undefined,
+      query: query || undefined,
+      sort: sort as ClassFilterDto['sort'],
+      cursor: cursor || undefined,
+    };
+    return this.classesService.findAll(filters);
   }
 
   @Get(':id')
