@@ -117,13 +117,15 @@ export function EnrollmentCard({ classId, price, sections }: Props) {
           Ребёнок
         </label>
         {children.length === 0 ? (
-          <div className="text-sm text-gray-500">
-            <p>Сначала добавьте ребёнка</p>
+          <div className="rounded-lg border-2 border-amber-300 bg-amber-50 p-3">
+            <p className="text-sm font-medium text-amber-800">
+              Сначала добавьте ребёнка в личном кабинете
+            </p>
             <button
               onClick={() => router.push('/dashboard')}
-              className="text-primary-600 hover:underline mt-1"
+              className="mt-2 inline-flex items-center gap-1 rounded-md bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700 transition-colors"
             >
-              Перейти в кабинет →
+              Добавить ребёнка →
             </button>
           </div>
         ) : (
@@ -176,6 +178,13 @@ export function EnrollmentCard({ classId, price, sections }: Props) {
         }`}>
           {message.text}
         </div>
+      )}
+
+      {/* Hint why buttons disabled */}
+      {children.length > 0 && (!selectedChild || !selectedSection) && (
+        <p className="text-xs text-amber-600 text-center">
+          {!selectedChild ? 'Выберите ребёнка' : 'Выберите время занятия'}
+        </p>
       )}
 
       {/* Buttons */}
