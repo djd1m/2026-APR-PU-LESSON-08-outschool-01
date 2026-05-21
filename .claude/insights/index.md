@@ -2,6 +2,62 @@
 
 ---
 
+## 2026-05-21 — Mock API как обязательный компонент для frontend-разработки
+
+**Tags:** mock-api, frontend-dev, developer-experience
+
+**Problem:**
+NestJS backend не запускается из-за TS ошибок (shared package rootDir, missing imports). Frontend разработка заблокирована. Попытки запустить через `nest start --watch` и `ts-node --transpile-only` провалились.
+
+**Solution:**
+Создать zero-dependency mock API на чистом Node.js `http` модуле (~200 строк). In-memory хранилище для users, children, enrollments, classes. Покрывает все endpoints которые вызывает frontend. Предзаполнить тестовые данные (5 классов, 5 учителей, admin аккаунт, live-now секция). Mock API стартует за 1 секунду vs 30+ секунд для NestJS.
+
+**References:** /tmp/km-api.js
+
+---
+
+## 2026-05-21 — useCallback + new Date() = бесконечный цикл рендеринга
+
+**Tags:** react, useCallback, useEffect, infinite-loop, performance
+
+**Problem:**
+Страница расписания учителя (`teach/schedule`) мерцала бесконечно. `useCallback` зависел от `weekEnd = addDays(weekStart, 6)` — новый Date объект каждый рендер → callback пересоздаётся → useEffect срабатывает → fetch → setState → рендер → цикл.
+
+**Solution:**
+Заменить `[user, weekStart, weekEnd]` на `[user, weekStart.getTime()]` в deps. `.getTime()` возвращает стабильное число, не создаёт новый объект.
+
+**References:** packages/web/src/app/(main)/teach/schedule/page.tsx
+
+---
+
+## 2026-05-21 — Server components должны fetch через localhost, не через внешний IP
+
+**Tags:** nextjs, server-components, ssr, fetch, networking
+
+**Problem:**
+Class detail page (server component) вызывал `apiFetch` с `NEXT_PUBLIC_API_URL=http://212.192.0.33:4020`. Сервер пытался обратиться к себе через внешний IP → firewall/DNS мог блокировать. Результат: `cls.subject` undefined → crash.
+
+**Solution:**
+Server-side fetch через `http://localhost:4020/api/v1/...` (internal). Client components продолжают использовать external URL (браузер → сервер).
+
+**References:** packages/web/src/app/(main)/classes/[id]/page.tsx
+
+---
+
+## 2026-05-21 — Регистрация преподавателя не должна показывать квиз про детей
+
+**Tags:** ux, registration, role-based-redirect
+
+**Problem:**
+После регистрации как TEACHER пользователь перенаправлялся на `/onboarding` (квиз про детей) — нерелевантный flow для учителя.
+
+**Solution:**
+Проверка роли в register page: `role === 'TEACHER' → /teach/dashboard`, `else → /onboarding`. Простой if, но критичный для UX.
+
+**References:** packages/web/src/app/(auth)/register/page.tsx
+
+---
+
 ## 2026-05-21 — Firefox прокси блокирует нестандартные порты, Chrome работает
 
 **Tags:** browser, proxy, firefox, ports, deployment
