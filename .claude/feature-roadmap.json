@@ -18,10 +18,12 @@
     },
     {
       "id": "onboarding-quiz",
+      "number": 2,
       "title": "Онбординг-квиз",
       "description": "AI-квиз при первом входе: возраст, интересы, цели ребёнка → персонализированная лента",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
+      "branch": "feature/002-onboarding-quiz",
       "epic": "E1",
       "stories": ["US-P02"],
       "depends_on": ["auth-registration"],
