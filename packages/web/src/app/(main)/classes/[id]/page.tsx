@@ -92,7 +92,7 @@ function StarRating({ rating }: { rating: number }) {
           &#9733;
         </span>
       ))}
-      <span className="ml-1 text-gray-600">{rating.toFixed(1)}</span>
+      <span className="ml-1 text-gray-600">{(rating ?? 0).toFixed(1)}</span>
     </span>
   );
 }

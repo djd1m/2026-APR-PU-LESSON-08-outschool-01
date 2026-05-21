@@ -160,7 +160,7 @@ export function TrialBookingCard({
   return (
     <Card className="sticky top-8 p-6">
       <p className="text-3xl font-bold text-gray-900">
-        от {pricePerSession.toLocaleString('ru-RU')} &#8381;
+        от {(pricePerSession ?? 0).toLocaleString('ru-RU')} &#8381;
       </p>
       <p className="text-sm text-gray-500">за занятие</p>
 

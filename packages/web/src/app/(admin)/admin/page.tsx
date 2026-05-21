@@ -101,9 +101,9 @@ export default function AdminDashboardPage() {
       ]);
 
       setStats(statsRes);
-      setPendingClasses(pendingRes.items || []);
-      setFlaggedReviews(flaggedRes.items || []);
-      setTeachers(teachersRes.items || []);
+      setPendingClasses(pendingRes?.items || []);
+      setFlaggedReviews(flaggedRes?.items || []);
+      setTeachers(teachersRes?.items || []);
     } catch {
       setStats(null);
     } finally {
@@ -241,7 +241,7 @@ export default function AdminDashboardPage() {
                               {cls.title}
                             </h3>
                             <p className="mt-1 text-sm text-gray-500">
-                              {cls.teacher.user.name} &middot; {cls.subject}
+                              {cls.teacher?.user?.name || 'Преподаватель'} &middot; {cls.subject}
                             </p>
                             <p className="text-xs text-gray-400">
                               {new Date(cls.createdAt).toLocaleDateString('ru-RU')}
@@ -288,7 +288,7 @@ export default function AdminDashboardPage() {
                           <div>
                             <div className="flex items-center gap-2">
                               <h3 className="font-semibold text-gray-900">
-                                {teacher.user.name}
+                                {teacher.user?.name || 'Преподаватель'}
                               </h3>
                               {teacher.verified ? (
                                 <Badge variant="primary">Верифицирован</Badge>
@@ -297,7 +297,7 @@ export default function AdminDashboardPage() {
                               )}
                             </div>
                             <p className="mt-1 text-sm text-gray-500">
-                              {teacher.user.email}
+                              {teacher.user?.email || ''}
                             </p>
                             <div className="mt-1 flex items-center gap-2">
                               <StarRating rating={teacher.rating} />
@@ -305,9 +305,9 @@ export default function AdminDashboardPage() {
                                 ({teacher.reviewCount} отзывов)
                               </span>
                             </div>
-                            {teacher.subjects.length > 0 && (
+                            {(teacher.subjects || []).length > 0 && (
                               <div className="mt-2 flex flex-wrap gap-1">
-                                {teacher.subjects.map((s) => (
+                                {(teacher.subjects || []).map((s) => (
                                   <Badge key={s} variant="secondary" className="text-xs">
                                     {s}
                                   </Badge>
@@ -360,12 +360,12 @@ export default function AdminDashboardPage() {
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
                               <span className="font-medium text-gray-900">
-                                {review.enrollment.child.name}
+                                {review.enrollment?.child?.name || 'Ученик'}
                               </span>
-                              <StarRating rating={review.rating} />
+                              <StarRating rating={review.rating ?? 0} />
                             </div>
                             <p className="mt-1 text-xs text-gray-400">
-                              {review.enrollment.section.class.title}
+                              {review.enrollment?.section?.class?.title || 'Занятие'}
                             </p>
                             {review.comment && (
                               <p className="mt-2 text-sm text-gray-600">
@@ -414,13 +414,13 @@ export default function AdminDashboardPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                   <Card className="p-5 text-center">
                     <p className="text-2xl font-bold text-gray-900">
-                      {stats.gmv.toLocaleString('ru-RU')} &#8381;
+                      {(stats.gmv ?? 0).toLocaleString('ru-RU')} &#8381;
                     </p>
                     <p className="mt-1 text-sm text-gray-500">GMV</p>
                   </Card>
                   <Card className="p-5 text-center">
                     <p className="text-2xl font-bold text-gray-900">
-                      {stats.mau.toLocaleString('ru-RU')}
+                      {(stats.mau ?? 0).toLocaleString('ru-RU')}
                     </p>
                     <p className="mt-1 text-sm text-gray-500">MAU</p>
                   </Card>
@@ -459,7 +459,7 @@ export default function AdminDashboardPage() {
                   </Card>
                   <Card className="p-5 text-center">
                     <p className="text-2xl font-bold text-gray-900">
-                      {stats.revenue.toLocaleString('ru-RU')} &#8381;
+                      {(stats.revenue ?? 0).toLocaleString('ru-RU')} &#8381;
                     </p>
                     <p className="mt-1 text-sm text-gray-500">Выручка</p>
                   </Card>

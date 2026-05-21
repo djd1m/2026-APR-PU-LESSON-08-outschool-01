@@ -118,10 +118,10 @@ export default function TeacherSchedulePage() {
         23, 59, 59, 999,
       ).toISOString();
 
-      const data = await apiFetch<SectionItem[]>(
+      const data = await apiFetch<SectionItem[] | { items: SectionItem[] }>(
         `/sections/teacher/schedule?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
       );
-      setSections(data);
+      setSections(Array.isArray(data) ? data : (data?.items || []));
     } catch {
       setSections([]);
     } finally {
@@ -136,7 +136,7 @@ export default function TeacherSchedulePage() {
       const res = await apiFetch<{ items: TeacherClass[] }>(
         '/classes?perPage=100',
       );
-      setClasses(res.items || []);
+      setClasses(res?.items || []);
     } catch {
       setClasses([]);
     }

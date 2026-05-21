@@ -50,7 +50,7 @@ export default function TeacherClassesPage() {
   const fetchClasses = useCallback(() => {
     setIsLoading(true);
     apiFetch<{ items: TeacherClass[] }>('/classes/my')
-      .then((res) => setClasses(res.items))
+      .then((res) => setClasses(res?.items || []))
       .catch(() => setClasses([]))
       .finally(() => setIsLoading(false));
   }, []);

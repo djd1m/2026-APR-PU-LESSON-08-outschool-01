@@ -88,8 +88,8 @@ export default function TeacherEarningsPage() {
         apiFetch<PaymentsResponse>('/payments/admin?page=1&perPage=50'),
       ]);
       setEarnings(earningsData);
-      setTransactions(paymentsData.items);
-      setMeta(paymentsData.meta);
+      setTransactions(paymentsData?.items || []);
+      setMeta(paymentsData?.meta || null);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to load earnings',
@@ -277,10 +277,10 @@ export default function TeacherEarningsPage() {
                         )}
                       </td>
                       <td className="px-6 py-4 text-gray-900 font-medium">
-                        {tx.enrollment.section.class.title}
+                        {tx.enrollment?.section?.class?.title || 'Занятие'}
                       </td>
                       <td className="px-6 py-4 text-gray-600">
-                        {tx.enrollment.child.name}
+                        {tx.enrollment?.child?.name || 'Ученик'}
                       </td>
                       <td className="px-6 py-4 text-right text-gray-900">
                         {formatPrice(tx.amount)}

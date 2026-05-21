@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -13,13 +13,13 @@ export default function ProfilePage() {
   const [email, setEmail] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [initialized, setInitialized] = useState(false);
 
-  if (user && !initialized) {
-    setName(user.name);
-    setEmail(user.email);
-    setInitialized(true);
-  }
+  useEffect(() => {
+    if (user) {
+      setName(user.name || '');
+      setEmail(user.email || '');
+    }
+  }, [user]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

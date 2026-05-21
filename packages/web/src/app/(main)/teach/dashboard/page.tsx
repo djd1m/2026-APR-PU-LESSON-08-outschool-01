@@ -101,7 +101,7 @@ export default function TeacherDashboardPage() {
           </h1>
           <p className="mt-2 text-gray-600">
             Добро пожаловать, {user.name}
-            {data?.teacher.verified && (
+            {data?.teacher?.verified && (
               <Badge variant="primary" className="ml-2">Верифицирован</Badge>
             )}
           </p>
@@ -124,7 +124,7 @@ export default function TeacherDashboardPage() {
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="p-5 text-center">
               <p className="text-2xl font-bold text-gray-900">
-                {data.totalEarned.toLocaleString('ru-RU')} &#8381;
+                {(data.totalEarned ?? 0).toLocaleString('ru-RU')} &#8381;
               </p>
               <p className="mt-1 text-sm text-gray-500">Всего заработано</p>
             </Card>
@@ -138,11 +138,11 @@ export default function TeacherDashboardPage() {
               <div className="flex items-center justify-center gap-2">
                 <StarRating rating={data.avgRating} />
                 <span className="text-2xl font-bold text-gray-900">
-                  {data.avgRating.toFixed(1)}
+                  {(data.avgRating ?? 0).toFixed(1)}
                 </span>
               </div>
               <p className="mt-1 text-sm text-gray-500">
-                Средняя оценка ({data.teacher.reviewCount} отзывов)
+                Средняя оценка ({data.teacher?.reviewCount ?? 0} отзывов)
               </p>
             </Card>
             <Card className="p-5 text-center">

@@ -35,9 +35,9 @@ export function ClassDetailReviewSection({ classId, reviews: initialReviews }: C
     if (!user) return;
 
     // Check if the user has a completed enrollment for this class without a review
-    apiFetch<{ data: Enrollment[] }>('/enrollments?status=completed')
+    apiFetch<{ data?: Enrollment[]; items?: Enrollment[] }>('/enrollments?status=completed')
       .then((res) => {
-        const eligible = res.data?.find(
+        const eligible = (res?.data || res?.items || []).find(
           (e) => e.classId === classId && !e.hasReview &&
             (e.status === 'COMPLETED' || e.status === 'ACTIVE'),
         );
@@ -55,9 +55,9 @@ export function ClassDetailReviewSection({ classId, reviews: initialReviews }: C
     apiFetch<{ items: Array<{ id: string; rating: number; comment?: string; createdAt: string; enrollment: { child: { name: string } } }> }>(`/reviews/class/${classId}`)
       .then((res) => {
         setReviews(
-          res.items.map((r) => ({
+          (res?.items || []).map((r) => ({
             id: r.id,
-            authorName: r.enrollment.child.name,
+            authorName: r.enrollment?.child?.name || 'Аноним',
             rating: r.rating,
             text: r.comment || '',
             createdAt: r.createdAt,
