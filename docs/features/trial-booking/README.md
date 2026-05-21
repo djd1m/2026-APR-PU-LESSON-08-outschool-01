@@ -3,6 +3,19 @@
 **ID:** trial-booking
 **Branch:** feature/006-trial-booking
 **Epic:** E3
+**Updated:** 2026-05-21
+
+## Реализованный UI Flow
+1. Родитель добавляет ребёнка (Dashboard → Дети → Добавить)
+2. Открывает класс (`/classes/:id`) → sidebar `EnrollmentCard`
+3. Выбирает ребёнка из dropdown + время секции
+4. Нажимает **"Попробовать бесплатно"** → enrollment CONFIRMED
+5. Проверяет в `/bookings` → видит запись
+6. Может отменить кнопкой **"Отменить"** → статус CANCELLED
+
+### Компоненты
+- `EnrollmentCard.tsx` — клиентский компонент выбора ребёнка + секции + записи
+- `bookings/page.tsx` — список записей с отменой
 **Stories:** US-016, US-017, US-018
 **Effort:** M
 **Status:** done
