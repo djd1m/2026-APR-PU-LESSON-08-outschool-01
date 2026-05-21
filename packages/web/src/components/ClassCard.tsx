@@ -15,6 +15,22 @@ interface ClassItem {
   subject: string;
 }
 
+const SUBJECT_GRADIENTS: Record<string, string> = {
+  'Математика': 'from-blue-400 to-indigo-500',
+  'Программирование': 'from-emerald-400 to-teal-600',
+  'Английский язык': 'from-red-400 to-rose-500',
+  'Рисование': 'from-pink-400 to-fuchsia-500',
+  'Музыка': 'from-violet-400 to-purple-600',
+  'Наука': 'from-amber-400 to-orange-500',
+  'Робототехника': 'from-cyan-400 to-blue-600',
+};
+
+const DEFAULT_GRADIENT = 'from-gray-400 to-gray-500';
+
+function getSubjectGradient(subject: string): string {
+  return SUBJECT_GRADIENTS[subject] ?? DEFAULT_GRADIENT;
+}
+
 function StarRating({ rating }: { rating: number }) {
   return (
     <span className="inline-flex items-center gap-0.5">
@@ -26,16 +42,21 @@ function StarRating({ rating }: { rating: number }) {
           &#9733;
         </span>
       ))}
+      <span className="ml-1 text-xs text-gray-600 font-medium">
+        {rating.toFixed(1)}
+      </span>
     </span>
   );
 }
 
 export function ClassCard({ classItem }: { classItem: ClassItem }) {
+  const gradient = getSubjectGradient(classItem.subject);
+
   return (
     <Link href={`/classes/${classItem.id}`}>
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-        {/* Image */}
-        <div className="aspect-video w-full bg-gray-100 relative">
+      <Card className="overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer">
+        {/* Image / Gradient Placeholder */}
+        <div className="aspect-video w-full relative">
           {classItem.imageUrl ? (
             <img
               src={classItem.imageUrl}
@@ -43,8 +64,12 @@ export function ClassCard({ classItem }: { classItem: ClassItem }) {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-gray-300 text-4xl">
-              &#128218;
+            <div
+              className={`h-full w-full bg-gradient-to-br ${gradient} flex items-center justify-center`}
+            >
+              <span className="text-white/80 text-4xl font-bold">
+                {classItem.subject.charAt(0)}
+              </span>
             </div>
           )}
           <Badge

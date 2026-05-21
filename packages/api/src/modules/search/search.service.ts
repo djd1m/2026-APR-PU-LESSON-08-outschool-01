@@ -1,10 +1,28 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Client } from '@elastic/elasticsearch';
 
+export interface SearchFilters {
+  subject?: string;
+  ageMin?: number;
+  ageMax?: number;
+  priceMin?: number;
+  priceMax?: number;
+}
+
+export interface SearchResult {
+  hits: Array<{
+    id: string;
+    score: number;
+    [key: string]: unknown;
+  }>;
+  total: number;
+}
+
 @Injectable()
 export class SearchService implements OnModuleInit {
   private readonly logger = new Logger(SearchService.name);
   private client: Client;
+  private available = false;
 
   private esAvailable = true;
   private esFailCount = 0;
@@ -21,6 +39,7 @@ export class SearchService implements OnModuleInit {
     try {
       await this.client.ping();
       await this.ensureIndex();
+      this.available = true;
     } catch {
       this.logger.warn('Elasticsearch not available, search will be degraded');
     }
@@ -46,6 +65,10 @@ export class SearchService implements OnModuleInit {
       }
       return fallback;
     }
+  }
+
+  isAvailable(): boolean {
+    return this.available;
   }
 
   private async ensureIndex() {
@@ -77,8 +100,14 @@ export class SearchService implements OnModuleInit {
               ageMin: { type: 'integer' },
               ageMax: { type: 'integer' },
               price: { type: 'float' },
-              teacherName: { type: 'text' },
+              teacherName: {
+                type: 'text',
+                analyzer: 'russian_custom',
+              },
+              rating: { type: 'float' },
+              reviewCount: { type: 'integer' },
               status: { type: 'keyword' },
+              createdAt: { type: 'date' },
             },
           },
         },
@@ -95,8 +124,12 @@ export class SearchService implements OnModuleInit {
     ageMax: number;
     price: number;
     teacherName: string;
+    rating?: number;
+    reviewCount?: number;
     status: string;
+    createdAt?: string;
   }) {
+    if (!this.available) return;
     await this.client.index({
       index: 'classes',
       id: classData.id,
@@ -158,7 +191,32 @@ export class SearchService implements OnModuleInit {
     }, emptyResult);
   }
 
+  /** @deprecated Use searchClasses instead */
+  async search(query: string, filters?: { subject?: string; ageMin?: number; ageMax?: number }) {
+    return this.searchClasses(query, filters);
+  }
+
   async removeClass(id: string) {
-    await this.client.delete({ index: 'classes', id });
+    if (!this.available) return;
+    try {
+      await this.client.delete({ index: 'classes', id });
+    } catch {
+      // Document may not exist in index
+    }
+  }
+
+  private buildSortClause(sort?: string): Array<Record<string, unknown>> {
+    switch (sort) {
+      case 'rating':
+        return [{ rating: { order: 'desc' } }, '_score'];
+      case 'price_asc':
+        return [{ price: { order: 'asc' } }, '_score'];
+      case 'price_desc':
+        return [{ price: { order: 'desc' } }, '_score'];
+      case 'newest':
+        return [{ createdAt: { order: 'desc' } }, '_score'];
+      default:
+        return ['_score'];
+    }
   }
 }
