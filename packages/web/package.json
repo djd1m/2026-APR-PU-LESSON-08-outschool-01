@@ -1,0 +1,24 @@
+{
+  "name": "@klassmarket/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "14.2.x",
+    "react": "18.3.x",
+    "react-dom": "18.3.x"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.x",
+    "@types/react-dom": "18.3.x",
+    "typescript": "5.x",
+    "tailwindcss": "3.x",
+    "postcss": "8.x",
+    "autoprefixer": "10.x"
+  }
+}
