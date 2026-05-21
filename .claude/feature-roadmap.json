@@ -167,7 +167,7 @@
       "title": "Отзывы и рейтинги",
       "description": "Система отзывов с модерацией, агрегированные рейтинги учителей и классов",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E5",
       "stories": [
         "US-P09",
@@ -176,14 +176,16 @@
       "depends_on": [
         "video-classroom"
       ],
-      "estimated_effort": "M"
+      "estimated_effort": "M",
+      "number": 10,
+      "branch": "feature/010-reviews-ratings"
     },
     {
       "id": "parent-dashboard",
       "title": "Дашборд родителя",
       "description": "Прогресс ребёнка, расписание, история платежей, управление профилями детей",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E5",
       "stories": [
         "US-P08"
@@ -191,14 +193,16 @@
       "depends_on": [
         "video-classroom"
       ],
-      "estimated_effort": "M"
+      "estimated_effort": "M",
+      "number": 11,
+      "branch": "feature/011-parent-dashboard"
     },
     {
       "id": "teacher-dashboard",
       "title": "Дашборд учителя",
       "description": "Заработок, аналитика, управление классами и расписанием, вывод средств",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E5",
       "stories": [
         "US-T03",
@@ -207,14 +211,16 @@
       "depends_on": [
         "payment-integration"
       ],
-      "estimated_effort": "M"
+      "estimated_effort": "M",
+      "number": 12,
+      "branch": "feature/012-teacher-dashboard"
     },
     {
       "id": "admin-panel",
       "title": "Админ-панель",
       "description": "Модерация учителей, отзывов, классов. Аналитика платформы (GMV, MAU, retention)",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E5",
       "stories": [
         "US-A01",
@@ -224,7 +230,9 @@
       "depends_on": [
         "reviews-ratings"
       ],
-      "estimated_effort": "L"
+      "estimated_effort": "L",
+      "number": 13,
+      "branch": "feature/013-admin-panel"
     },
     {
       "id": "ai-recommendations",
