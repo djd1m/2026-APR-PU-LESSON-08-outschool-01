@@ -124,7 +124,7 @@ export default function TeacherEarningsPage() {
           body: JSON.stringify({ amount }),
         },
       );
-      setWithdrawMessage(result.message);
+      setWithdrawMessage(result?.message || 'Запрос на вывод отправлен');
       setWithdrawAmount('');
       // Refresh earnings
       fetchData();

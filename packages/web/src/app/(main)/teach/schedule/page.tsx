@@ -259,7 +259,7 @@ export default function TeacherSchedulePage() {
     );
   }
 
-  if (!user || user.role !== 'teacher') {
+  if (!user || user.role !== 'TEACHER') {
     return (
       <div className="container-page py-16 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Доступ ограничен</h1>

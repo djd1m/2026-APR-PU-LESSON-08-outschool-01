@@ -89,7 +89,7 @@ export default function AdminDashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const loadData = useCallback(async () => {
-    if (!user || user.role !== 'admin') return;
+    if (!user || user.role !== 'ADMIN') return;
     setIsLoading(true);
 
     try {
@@ -161,7 +161,7 @@ export default function AdminDashboardPage() {
     );
   }
 
-  if (!user || user.role !== 'admin') {
+  if (!user || user.role !== 'ADMIN') {
     return (
       <div className="container-page py-16 text-center">
         <h1 className="text-2xl font-bold text-gray-900">Доступ запрещен</h1>

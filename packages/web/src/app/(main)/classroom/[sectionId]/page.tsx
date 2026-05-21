@@ -221,7 +221,7 @@ export default function ClassroomPage() {
             {roomInfo?.section.class.title}
           </p>
 
-          {user.role === 'parent' && (
+          {user.role === 'PARENT' && (
             <div className="mt-6 p-4 rounded-xl bg-primary-50">
               <p className="text-sm font-medium text-primary-700">
                 Как прошло занятие?
@@ -324,7 +324,7 @@ export default function ClassroomPage() {
                 <Button
                   size="lg"
                   onClick={handleJoin}
-                  disabled={isJoining || (!isClassStartingSoon && user.role !== 'teacher')}
+                  disabled={isJoining || (!isClassStartingSoon && user.role !== 'TEACHER')}
                 >
                   {isJoining
                     ? 'Подключение...'
