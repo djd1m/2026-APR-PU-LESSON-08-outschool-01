@@ -10,6 +10,13 @@ import { apiFetch } from '@/lib/api';
 
 type TabId = 'schedule' | 'progress' | 'payments' | 'children';
 
+interface ChildItem {
+  id: string;
+  name: string;
+  birthDate?: string;
+  interests?: string[];
+}
+
 interface BookingItem {
   id: string;
   classId: string;
@@ -57,16 +64,43 @@ export default function DashboardPage() {
   const { user, isLoading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>('schedule');
   const [data, setData] = useState<DashboardData | null>(null);
+  const [children, setChildren] = useState<ChildItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAddChild, setShowAddChild] = useState(false);
+  const [childName, setChildName] = useState('');
+  const [childBirthDate, setChildBirthDate] = useState('');
+  const [childInterests, setChildInterests] = useState<string[]>([]);
+
+  const interestOptions = ['Математика', 'Английский', 'Программирование', 'Рисование', 'Музыка', 'Шахматы', 'Наука', 'Спорт', 'Чтение'];
 
   useEffect(() => {
     if (!user) return;
 
-    apiFetch<DashboardData>('/users/dashboard')
-      .then(setData)
-      .catch(() => setData(null))
-      .finally(() => setIsLoading(false));
+    Promise.all([
+      apiFetch<DashboardData>('/users/dashboard').catch(() => null),
+      apiFetch<ChildItem[]>('/users/children').catch(() => []),
+    ]).then(([dashData, childrenData]) => {
+      setData(dashData);
+      setChildren(Array.isArray(childrenData) ? childrenData : []);
+    }).finally(() => setIsLoading(false));
   }, [user]);
+
+  async function handleAddChild() {
+    if (!childName.trim() || !childBirthDate) return;
+    try {
+      const newChild = await apiFetch<ChildItem>('/users/children', {
+        method: 'POST',
+        body: JSON.stringify({ name: childName, birthDate: childBirthDate, interests: childInterests }),
+      });
+      setChildren(prev => [...prev, newChild]);
+      setChildName('');
+      setChildBirthDate('');
+      setChildInterests([]);
+      setShowAddChild(false);
+    } catch (err) {
+      alert('Ошибка добавления ребёнка');
+    }
+  }
 
   if (authLoading) {
     return (
@@ -151,66 +185,153 @@ export default function DashboardPage() {
         {isLoading ? (
           <div className="space-y-4">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-24 animate-pulse rounded-2xl bg-gray-100"
-              />
+              <div key={i} className="h-24 animate-pulse rounded-2xl bg-gray-100" />
             ))}
           </div>
-        ) : !data ? (
-          <Card className="p-8 text-center">
-            <p className="text-gray-500">Не удалось загрузить данные</p>
-          </Card>
-        ) : (
+        ) : activeTab === 'schedule' ? (
+          /* Расписание */
           <div className="space-y-4">
-            {(data.upcomingClasses || []).length === 0 ? (
+            {(data?.upcomingClasses || []).length === 0 ? (
               <Card className="p-8 text-center">
                 <p className="text-gray-500">Нет предстоящих занятий</p>
                 <Link href="/classes" className="mt-2 inline-block text-primary-600 hover:underline text-sm">
                   Перейти в каталог
                 </Link>
               </Card>
-            ) : (data.upcomingClasses || []).map((booking) => (
+            ) : (data?.upcomingClasses || []).map((booking) => (
               <Card key={booking.id} className="flex items-center justify-between p-5">
                 <div>
-                  <Link
-                    href={`/classes/${booking.classId}`}
-                    className="text-lg font-semibold text-gray-900 hover:text-primary-600"
-                  >
+                  <Link href={`/classes/${booking.classId}`} className="text-lg font-semibold text-gray-900 hover:text-primary-600">
                     {booking.classTitle}
                   </Link>
-                  <p className="mt-1 text-sm text-gray-500">
-                    {booking.teacherName}
-                  </p>
+                  <p className="mt-1 text-sm text-gray-500">{booking.teacherName}</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  {booking.status === 'upcoming' && isClassroomAvailable(booking.nextSession) && (
-                    <Link
-                      href={`/classroom/${booking.sectionId}`}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
-                    >
-                      <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-                      Войти в класс
-                    </Link>
-                  )}
-                  <div className="text-right">
-                    <Badge variant={statusVariant[booking.status] || 'secondary'}>
-                      {statusLabel[booking.status] || booking.status}
-                    </Badge>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {new Date(booking.nextSession).toLocaleDateString('ru-RU', {
-                        day: 'numeric',
-                        month: 'long',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </p>
-                  </div>
+                <div className="text-right">
+                  <Badge variant={statusVariant[booking.status] || 'secondary'}>
+                    {statusLabel[booking.status] || booking.status}
+                  </Badge>
                 </div>
               </Card>
             ))}
           </div>
-        )}
+        ) : activeTab === 'progress' ? (
+          /* Прогресс */
+          <Card className="p-8 text-center">
+            <p className="text-gray-500">
+              {children.length === 0
+                ? 'Добавьте ребёнка во вкладке "Дети", чтобы отслеживать прогресс'
+                : 'Прогресс будет доступен после посещения занятий'}
+            </p>
+          </Card>
+        ) : activeTab === 'payments' ? (
+          /* Платежи */
+          <Card className="p-8 text-center">
+            <p className="text-gray-500">История платежей появится после оплаты занятий</p>
+          </Card>
+        ) : activeTab === 'children' ? (
+          /* Дети */
+          <div className="space-y-4">
+            {children.length === 0 && !showAddChild && (
+              <Card className="p-8 text-center">
+                <p className="text-lg font-medium text-gray-900">У вас пока нет добавленных детей</p>
+                <p className="mt-1 text-sm text-gray-500">
+                  Добавьте ребёнка, чтобы записать его на занятия
+                </p>
+                <Button className="mt-4" onClick={() => setShowAddChild(true)}>
+                  Добавить ребёнка
+                </Button>
+              </Card>
+            )}
+
+            {children.map((child) => (
+              <Card key={child.id} className="p-5">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-lg font-bold text-primary-700">
+                    {child.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold text-gray-900">{child.name}</p>
+                    {child.birthDate && (
+                      <p className="text-sm text-gray-500">
+                        Дата рождения: {new Date(child.birthDate).toLocaleDateString('ru-RU')}
+                      </p>
+                    )}
+                    {child.interests && child.interests.length > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {child.interests.map((interest) => (
+                          <span key={interest} className="inline-block rounded-full bg-primary-50 px-2 py-0.5 text-xs text-primary-700">
+                            {interest}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            ))}
+
+            {children.length > 0 && !showAddChild && (
+              <Button variant="outline" onClick={() => setShowAddChild(true)}>
+                + Добавить ещё ребёнка
+              </Button>
+            )}
+
+            {showAddChild && (
+              <Card className="p-6 space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900">Новый ребёнок</h3>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Имя</label>
+                  <input
+                    type="text"
+                    value={childName}
+                    onChange={(e) => setChildName(e.target.value)}
+                    placeholder="Как зовут ребёнка?"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Дата рождения</label>
+                  <input
+                    type="date"
+                    value={childBirthDate}
+                    onChange={(e) => setChildBirthDate(e.target.value)}
+                    max={new Date().toISOString().split('T')[0]}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Интересы</label>
+                  <div className="flex flex-wrap gap-2">
+                    {interestOptions.map((interest) => (
+                      <button
+                        key={interest}
+                        type="button"
+                        onClick={() => setChildInterests(prev =>
+                          prev.includes(interest) ? prev.filter(i => i !== interest) : [...prev, interest]
+                        )}
+                        className={`rounded-full px-3 py-1 text-sm transition-colors ${
+                          childInterests.includes(interest)
+                            ? 'bg-primary-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        {interest}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <Button onClick={handleAddChild} disabled={!childName.trim() || !childBirthDate}>
+                    Добавить
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowAddChild(false)}>
+                    Отмена
+                  </Button>
+                </div>
+              </Card>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   );

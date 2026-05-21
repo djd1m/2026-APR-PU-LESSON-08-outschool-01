@@ -52,7 +52,7 @@ export function Navbar() {
                 href="/dashboard"
                 className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
               >
-                Мои занятия
+                Личный кабинет
               </Link>
               {user.role === 'TEACHER' && (
                 <Link
