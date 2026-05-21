@@ -176,24 +176,32 @@ export default function RegisterPage() {
           </div>
 
           {/* Terms acceptance checkbox */}
-          <label className="flex items-start gap-3 cursor-pointer">
+          <label className={`flex items-start gap-3 cursor-pointer rounded-lg p-3 border-2 transition-colors ${
+            termsAccepted ? 'border-primary-500 bg-primary-50' : 'border-gray-200 bg-white'
+          }`}>
             <input
               type="checkbox"
               checked={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
-              className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              className="mt-0.5 h-5 w-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
             />
-            <span className="text-xs text-gray-500">
+            <span className="text-sm text-gray-700">
               Я соглашаюсь с{' '}
-              <a href="/terms" className="underline text-primary-600">
+              <a href="/terms" className="underline text-primary-600 font-medium">
                 условиями использования
               </a>{' '}
               и{' '}
-              <a href="/privacy" className="underline text-primary-600">
+              <a href="/privacy" className="underline text-primary-600 font-medium">
                 политикой конфиденциальности
               </a>
             </span>
           </label>
+
+          {!termsAccepted && (
+            <p className="text-xs text-amber-600 text-center">
+              Отметьте чекбокс выше, чтобы продолжить
+            </p>
+          )}
 
           <Button
             type="submit"
