@@ -39,12 +39,18 @@ export class EnrollmentsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.enrollmentsService.findById(id);
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.enrollmentsService.findById(id, userId);
   }
 
   @Patch(':id/cancel')
-  async cancel(@Param('id', ParseUUIDPipe) id: string) {
-    return this.enrollmentsService.cancel(id);
+  async cancel(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.enrollmentsService.cancel(id, userId);
   }
 }

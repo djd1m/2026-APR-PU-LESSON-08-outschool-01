@@ -15,6 +15,21 @@ async function bootstrap() {
   // Enable cookie parser for httpOnly token cookies
   app.use(cookieParser());
 
+  // CSRF: For cookie-based auth, validate Origin header on mutations
+  app.use((req, res, next) => {
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+      const origin = req.get('Origin') || req.get('Referer');
+      const allowed = (process.env.CORS_ORIGIN || 'http://localhost:3000');
+      if (origin && !origin.startsWith(allowed)) {
+        // Allow webhook callbacks (no Origin header)
+        if (req.path.includes('/webhook')) { next(); return; }
+        res.status(403).json({ success: false, error: { code: 'CSRF', message: 'Invalid origin' } });
+        return;
+      }
+    }
+    next();
+  });
+
   app.setGlobalPrefix('api/v1');
 
   app.useGlobalPipes(

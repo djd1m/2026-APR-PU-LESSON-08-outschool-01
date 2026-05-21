@@ -7,6 +7,7 @@ import { ClassesRepository } from './classes.repository';
 import { CreateClassDto } from './dto/create-class.dto';
 import { slugify, MAX_CLASS_SIZE } from '@klassmarket/shared';
 import { PrismaService } from '../../prisma/prisma.service';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class ClassesService {
@@ -14,6 +15,16 @@ export class ClassesService {
     private classesRepository: ClassesRepository,
     private prisma: PrismaService,
   ) {}
+
+  private generateSlug(title: string): string {
+    const base = title
+      .toLowerCase()
+      .replace(/[^a-zа-яё0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .substring(0, 50);
+    const suffix = crypto.randomBytes(4).toString('hex');
+    return `${base}-${suffix}`;
+  }
 
   async create(teacherUserId: string, dto: CreateClassDto) {
     const profile = await this.prisma.teacherProfile.findUnique({
@@ -24,7 +35,7 @@ export class ClassesService {
       throw new ForbiddenException('Only teachers can create classes');
     }
 
-    const slug = slugify(dto.title) + '-' + Date.now().toString(36);
+    const slug = this.generateSlug(dto.title);
 
     return this.classesRepository.create({
       title: dto.title,

@@ -1,4 +1,4 @@
-import { IsString, IsNumber, Min, Max, MinLength, IsOptional } from 'class-validator';
+import { IsString, IsNumber, Min, Max, MinLength, IsOptional, Validate, ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
 import {
   MIN_CLASS_PRICE,
   MAX_CLASS_PRICE,
@@ -6,6 +6,18 @@ import {
   MAX_AGE,
   MAX_CLASS_SIZE,
 } from '@klassmarket/shared';
+
+@ValidatorConstraint({ name: 'ageRangeValidator', async: false })
+class AgeRangeValidator implements ValidatorConstraintInterface {
+  validate(_value: number, args: ValidationArguments) {
+    const obj = args.object as CreateClassDto;
+    return obj.ageMin <= obj.ageMax;
+  }
+
+  defaultMessage() {
+    return 'ageMin должен быть меньше или равен ageMax';
+  }
+}
 
 export class CreateClassDto {
   @IsString()
@@ -32,6 +44,7 @@ export class CreateClassDto {
   @IsNumber()
   @Min(MIN_AGE)
   @Max(MAX_AGE)
+  @Validate(AgeRangeValidator)
   ageMax!: number;
 
   @IsNumber()

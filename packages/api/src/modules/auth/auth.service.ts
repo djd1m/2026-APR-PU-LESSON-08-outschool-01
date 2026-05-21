@@ -2,6 +2,7 @@ import {
   Injectable,
   ConflictException,
   UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -11,6 +12,8 @@ import { UserRole } from '@klassmarket/shared';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
@@ -44,6 +47,8 @@ export class AuthService {
 
     const tokens = this.generateTokens(user.id, user.email, user.role);
 
+    this.logger.log(`User registered: ${user.email} [${user.role}]`);
+
     return {
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
       ...tokens,
@@ -53,11 +58,13 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
+      this.logger.warn(`Login failed: ${email}`);
       return null;
     }
 
     const isValid = await bcrypt.compare(password, user.passwordHash);
     if (!isValid) {
+      this.logger.warn(`Login failed: ${email}`);
       return null;
     }
 
@@ -66,6 +73,7 @@ export class AuthService {
 
   async login(user: { id: string; email: string; role: string }) {
     const tokens = this.generateTokens(user.id, user.email, user.role);
+    this.logger.log(`Login success: ${user.email}`);
     return {
       user,
       ...tokens,

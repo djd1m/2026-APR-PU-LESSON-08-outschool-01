@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { EnrollmentsRepository } from './enrollments.repository';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -46,12 +47,25 @@ export class EnrollmentsService {
     return enrollment;
   }
 
-  async findById(id: string) {
+  async findById(id: string, parentId?: string) {
     const enrollment = await this.enrollmentsRepository.findById(id);
     if (!enrollment) {
       throw new NotFoundException('Enrollment not found');
     }
+    if (parentId) {
+      await this.verifyEnrollmentOwnership(enrollment.childId, parentId);
+    }
     return enrollment;
+  }
+
+  private async verifyEnrollmentOwnership(childId: string, parentId: string) {
+    const child = await this.prisma.child.findUnique({
+      where: { id: childId },
+      select: { parentId: true },
+    });
+    if (!child || child.parentId !== parentId) {
+      throw new ForbiddenException('Access denied to this enrollment');
+    }
   }
 
   async findByParent(parentId: string, page = 1, perPage = 20) {
@@ -74,8 +88,8 @@ export class EnrollmentsService {
     };
   }
 
-  async cancel(id: string) {
-    const enrollment = await this.findById(id);
+  async cancel(id: string, parentId?: string) {
+    const enrollment = await this.findById(id, parentId);
 
     await this.enrollmentsRepository.update(id, {
       status: 'CANCELLED',

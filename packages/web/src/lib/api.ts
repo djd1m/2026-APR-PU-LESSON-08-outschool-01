@@ -1,4 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_PREFIX = '/api/v1';
 
 export class ApiError extends Error {
   constructor(
@@ -20,7 +21,7 @@ export async function apiFetch<T>(
   path: string,
   options?: RequestInit,
 ): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await fetch(`${API_URL}${API_PREFIX}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ export async function apiFetch<T>(
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
       try {
-        const refreshRes = await fetch(`${API_URL}/auth/refresh`, {
+        const refreshRes = await fetch(`${API_URL}${API_PREFIX}/auth/refresh`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ refreshToken }),
@@ -46,7 +47,7 @@ export async function apiFetch<T>(
           localStorage.setItem('refreshToken', newRefresh);
 
           // Retry original request with new token
-          const retryRes = await fetch(`${API_URL}${path}`, {
+          const retryRes = await fetch(`${API_URL}${API_PREFIX}${path}`, {
             ...options,
             headers: {
               'Content-Type': 'application/json',

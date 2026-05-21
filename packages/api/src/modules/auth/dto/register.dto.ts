@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength, MaxLength, IsIn, IsOptional } from 'class-validator';
+import { IsEmail, IsString, MinLength, MaxLength, IsIn, IsOptional, Matches } from 'class-validator';
 import { UserRole } from '@klassmarket/shared';
 
 export class RegisterDto {
@@ -8,6 +8,9 @@ export class RegisterDto {
   @IsString()
   @MinLength(8, { message: 'Пароль минимум 8 символов' })
   @MaxLength(100)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
+    message: 'Пароль должен содержать заглавную, строчную букву и цифру',
+  })
   password!: string;
 
   @IsString()
