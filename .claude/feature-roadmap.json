@@ -1,0 +1,194 @@
+{
+  "project": "klassmarket",
+  "version": "1.0.0",
+  "updated": "2026-05-21",
+  "features": [
+    {
+      "id": "auth-registration",
+      "title": "Аутентификация и регистрация",
+      "description": "VK ID, Яндекс ID, email/password регистрация и вход для родителей и учителей",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E1",
+      "stories": ["US-P01", "US-T01"],
+      "depends_on": [],
+      "estimated_effort": "M"
+    },
+    {
+      "id": "onboarding-quiz",
+      "title": "Онбординг-квиз",
+      "description": "AI-квиз при первом входе: возраст, интересы, цели ребёнка → персонализированная лента",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E1",
+      "stories": ["US-P02"],
+      "depends_on": ["auth-registration"],
+      "estimated_effort": "S"
+    },
+    {
+      "id": "class-catalog",
+      "title": "Каталог классов с поиском",
+      "description": "Каталог с фильтрами (возраст, предмет, цена, расписание), полнотекстовый поиск Elasticsearch",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E2",
+      "stories": ["US-P03", "US-P04"],
+      "depends_on": ["auth-registration"],
+      "estimated_effort": "L"
+    },
+    {
+      "id": "teacher-profiles",
+      "title": "Профили учителей",
+      "description": "Профиль с портфолио, образованием, отзывами, рейтингом и верификацией",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E2",
+      "stories": ["US-T01", "US-T02"],
+      "depends_on": ["auth-registration"],
+      "estimated_effort": "M"
+    },
+    {
+      "id": "class-creation",
+      "title": "Создание и модерация классов",
+      "description": "Учитель создаёт класс (описание, цена, расписание, возраст), админ модерирует",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E2",
+      "stories": ["US-T02", "US-A01"],
+      "depends_on": ["teacher-profiles"],
+      "estimated_effort": "M"
+    },
+    {
+      "id": "trial-booking",
+      "title": "Бронирование пробного занятия",
+      "description": "Бесплатное первое занятие без привязки карты, одноклик-запись",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E3",
+      "stories": ["US-P05"],
+      "depends_on": ["class-catalog"],
+      "estimated_effort": "M"
+    },
+    {
+      "id": "payment-integration",
+      "title": "Оплата через ЮKassa",
+      "description": "Приём платежей, автоматический сплит комиссии 22%, выплаты учителям, возвраты",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E3",
+      "stories": ["US-P06", "US-T05"],
+      "depends_on": ["trial-booking"],
+      "estimated_effort": "XL"
+    },
+    {
+      "id": "scheduling",
+      "title": "Расписание секций",
+      "description": "Timezone-aware расписание, конфликт-детекция, календарная интеграция",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E3",
+      "stories": ["US-T03"],
+      "depends_on": ["class-creation"],
+      "estimated_effort": "M"
+    },
+    {
+      "id": "video-classroom",
+      "title": "Видеоклассы (Jitsi Meet)",
+      "description": "Self-hosted Jitsi: создание комнат, enrollment-only доступ, auto-close, parent notify",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E4",
+      "stories": ["US-P07", "US-T04", "US-C01a"],
+      "depends_on": ["payment-integration", "scheduling"],
+      "estimated_effort": "XL"
+    },
+    {
+      "id": "reviews-ratings",
+      "title": "Отзывы и рейтинги",
+      "description": "Система отзывов с модерацией, агрегированные рейтинги учителей и классов",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E5",
+      "stories": ["US-P09", "US-A02"],
+      "depends_on": ["video-classroom"],
+      "estimated_effort": "M"
+    },
+    {
+      "id": "parent-dashboard",
+      "title": "Дашборд родителя",
+      "description": "Прогресс ребёнка, расписание, история платежей, управление профилями детей",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E5",
+      "stories": ["US-P08"],
+      "depends_on": ["video-classroom"],
+      "estimated_effort": "M"
+    },
+    {
+      "id": "teacher-dashboard",
+      "title": "Дашборд учителя",
+      "description": "Заработок, аналитика, управление классами и расписанием, вывод средств",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E5",
+      "stories": ["US-T03", "US-T05"],
+      "depends_on": ["payment-integration"],
+      "estimated_effort": "M"
+    },
+    {
+      "id": "admin-panel",
+      "title": "Админ-панель",
+      "description": "Модерация учителей, отзывов, классов. Аналитика платформы (GMV, MAU, retention)",
+      "priority": "mvp",
+      "status": "planned",
+      "epic": "E5",
+      "stories": ["US-A01", "US-A02", "US-A03"],
+      "depends_on": ["reviews-ratings"],
+      "estimated_effort": "L"
+    },
+    {
+      "id": "ai-recommendations",
+      "title": "AI-рекомендации классов",
+      "description": "MCP-сервер: collaborative + content-based filtering для персонализированных рекомендаций",
+      "priority": "v1.0",
+      "status": "planned",
+      "epic": "E6",
+      "stories": ["US-P11"],
+      "depends_on": ["class-catalog", "reviews-ratings"],
+      "estimated_effort": "L"
+    },
+    {
+      "id": "gamification",
+      "title": "Геймификация для детей",
+      "description": "XP-система, уровни, бейджи, streak. Мотивация через визуальный прогресс",
+      "priority": "v1.0",
+      "status": "planned",
+      "epic": "E6",
+      "stories": ["US-C01b", "US-C02"],
+      "depends_on": ["video-classroom"],
+      "estimated_effort": "L"
+    },
+    {
+      "id": "referral-program",
+      "title": "Реферальная программа",
+      "description": "Кешбэк за приглашённых друзей, промокоды, тиеры амбассадоров",
+      "priority": "v1.0",
+      "status": "planned",
+      "epic": "E6",
+      "stories": ["US-P10"],
+      "depends_on": ["payment-integration"],
+      "estimated_effort": "M"
+    },
+    {
+      "id": "notifications",
+      "title": "Система уведомлений",
+      "description": "Email + push: напоминания о занятиях, новые классы, прогресс ребёнка, промо",
+      "priority": "v1.0",
+      "status": "planned",
+      "epic": "E6",
+      "stories": [],
+      "depends_on": ["auth-registration"],
+      "estimated_effort": "M"
+    }
+  ]
+}
