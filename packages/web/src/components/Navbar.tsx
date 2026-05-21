@@ -23,6 +23,12 @@ export function Navbar() {
             Каталог
           </Link>
           <Link
+            href="/teachers"
+            className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            Преподаватели
+          </Link>
+          <Link
             href="/register"
             className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
           >

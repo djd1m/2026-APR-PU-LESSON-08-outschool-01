@@ -32,10 +32,12 @@ export interface TeacherProfile {
   userId: string;
   bio: string;
   education: string;
+  experience: string;
   subjects: string[];
   rating: number;
   reviewCount: number;
   verified: boolean;
+  verificationStatus: 'none' | 'pending' | 'approved' | 'rejected';
   createdAt: Date;
   updatedAt: Date;
 }

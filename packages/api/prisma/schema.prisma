@@ -81,16 +81,18 @@ model Child {
 }
 
 model TeacherProfile {
-  id          String   @id @default(uuid())
-  userId      String   @unique @map("user_id")
-  bio         String   @default("")
-  education   String   @default("")
-  subjects    String[] @default([])
-  rating      Decimal  @default(0) @db.Decimal(3, 2)
-  reviewCount Int      @default(0) @map("review_count")
-  verified    Boolean  @default(false)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id                  String   @id @default(uuid())
+  userId              String   @unique @map("user_id")
+  bio                 String   @default("")
+  education           String   @default("")
+  experience          String   @default("")
+  subjects            String[] @default([])
+  rating              Decimal  @default(0) @db.Decimal(3, 2)
+  reviewCount         Int      @default(0) @map("review_count")
+  verified            Boolean  @default(false)
+  verificationStatus  String   @default("none") @map("verification_status")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   classes Class[]
