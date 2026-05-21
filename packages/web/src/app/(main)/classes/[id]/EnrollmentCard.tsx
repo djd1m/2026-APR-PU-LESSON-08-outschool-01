@@ -69,13 +69,9 @@ export function EnrollmentCard({ classId, price, sections }: Props) {
       setMessage({
         type: 'success',
         text: trial
-          ? 'Пробное занятие забронировано! Проверьте раздел "Мои записи".'
-          : 'Вы записаны! Переходим к оплате...',
+          ? 'Пробное занятие забронировано!'
+          : 'Вы записаны!',
       });
-      if (!trial) {
-        // Redirect to checkout after short delay
-        setTimeout(() => router.push('/dashboard'), 2000);
-      }
     } catch (err) {
       setMessage({
         type: 'error',
@@ -177,6 +173,15 @@ export function EnrollmentCard({ classId, price, sections }: Props) {
           message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
         }`}>
           {message.text}
+          {message.type === 'success' && selectedSection && (
+            <button
+              onClick={() => router.push(`/classroom/${selectedSection}`)}
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+            >
+              <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+              Войти в класс
+            </button>
+          )}
         </div>
       )}
 
