@@ -21,3 +21,12 @@ export const JWT_ACCESS_TTL = '15m';
 
 /** JWT refresh token TTL */
 export const JWT_REFRESH_TTL = '7d';
+
+/** Minimum section duration in minutes */
+export const MIN_SECTION_DURATION = 15;
+
+/** Maximum section duration in minutes */
+export const MAX_SECTION_DURATION = 180;
+
+/** Default timezone for schedule display */
+export const DEFAULT_TIMEZONE = 'Europe/Moscow';

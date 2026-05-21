@@ -8,6 +8,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { SearchModule } from './modules/search/search.module';
 import { HealthModule } from './modules/health/health.module';
+import { SectionsModule } from './modules/sections/sections.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { HealthModule } from './modules/health/health.module';
     AuthModule,
     UsersModule,
     ClassesModule,
+    SectionsModule,
     EnrollmentsModule,
     PaymentsModule,
     ReviewsModule,

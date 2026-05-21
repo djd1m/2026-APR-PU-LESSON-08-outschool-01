@@ -4,6 +4,15 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
+interface SectionInfo {
+  id: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+  maxStudents: number;
+  enrolledCount: number;
+}
+
 interface ClassDetail {
   id: string;
   title: string;
@@ -29,6 +38,7 @@ interface ClassDetail {
     dayOfWeek: string;
     time: string;
   }>;
+  sections?: SectionInfo[];
   reviews: Array<{
     id: string;
     authorName: string;
@@ -152,6 +162,53 @@ export default async function ClassDetailPage({
               {cls.sessionsPerWeek}x в неделю, {cls.durationMinutes} мин
             </p>
           </div>
+
+          {/* Upcoming sections */}
+          {cls.sections && cls.sections.length > 0 && (
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">
+                Ближайшие занятия
+              </h2>
+              <div className="mt-3 space-y-2">
+                {cls.sections
+                  .filter((s) => s.status === 'SCHEDULED' && new Date(s.startTime) > new Date())
+                  .slice(0, 5)
+                  .map((section) => (
+                    <div
+                      key={section.id}
+                      className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3 text-sm"
+                    >
+                      <div>
+                        <span className="font-medium text-gray-900">
+                          {new Date(section.startTime).toLocaleDateString('ru-RU', {
+                            weekday: 'short',
+                            day: 'numeric',
+                            month: 'long',
+                            timeZone: 'Europe/Moscow',
+                          })}
+                        </span>
+                        <span className="ml-2 text-gray-600">
+                          {new Date(section.startTime).toLocaleTimeString('ru-RU', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            timeZone: 'Europe/Moscow',
+                          })}
+                          {' '}&mdash;{' '}
+                          {new Date(section.endTime).toLocaleTimeString('ru-RU', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            timeZone: 'Europe/Moscow',
+                          })}
+                        </span>
+                      </div>
+                      <div className="text-gray-500">
+                        {section.enrolledCount}/{section.maxStudents} мест
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
 
           {/* Reviews */}
           <div>

@@ -28,6 +28,52 @@ export function calculateAge(birthDate: Date): number {
 }
 
 /**
+ * Format a date/time in a specific timezone for display.
+ * @param date - Date to format (ISO string or Date)
+ * @param timezone - IANA timezone (e.g. 'Europe/Moscow')
+ * @param options - Intl.DateTimeFormat options
+ * @returns Formatted date/time string
+ */
+export function formatInTimezone(
+  date: Date | string,
+  timezone: string,
+  options?: Intl.DateTimeFormatOptions,
+): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return new Intl.DateTimeFormat('ru-RU', {
+    timeZone: timezone,
+    ...options,
+  }).format(d);
+}
+
+/**
+ * Get the start of the week (Monday) for a given date.
+ * @param date - Reference date
+ * @returns Date set to Monday 00:00:00.000
+ */
+export function getWeekStart(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+/**
+ * Get the end of the week (Sunday) for a given date.
+ * @param date - Reference date
+ * @returns Date set to Sunday 23:59:59.999
+ */
+export function getWeekEnd(date: Date): Date {
+  const start = getWeekStart(date);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  end.setHours(23, 59, 59, 999);
+  return end;
+}
+
+/**
  * Convert a string to a URL-friendly slug.
  * Supports Cyrillic transliteration.
  * @param text - Input string

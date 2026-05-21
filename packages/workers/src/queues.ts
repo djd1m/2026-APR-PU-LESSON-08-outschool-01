@@ -13,7 +13,8 @@ export type EmailJobType =
   | 'welcome'
   | 'booking-confirmation'
   | 'class-reminder'
-  | 'payout-complete';
+  | 'payout-complete'
+  | 'section-cancelled';
 
 export interface EmailJobData {
   type: EmailJobType;
