@@ -2,6 +2,33 @@
 
 ---
 
+## 2026-05-21 — Phase 4 REVIEW выявил критические проблемы: 40-50% спеки не реализовано, privilege escalation
+
+**Tags:** brutal-honesty-review, phase-4, security, implementation-gap, blocker
+
+**Problem:**
+brutal-honesty-review (Linus + Ramsay modes) по всем 13 фичам показал вердикт **NEEDS FIX** для каждой. Ключевые findings:
+1. **CRITICAL: Privilege escalation** — `POST /auth/register` позволяет указать `role: "ADMIN"`, обходя все RBAC guards
+2. **JWT secret fallback** — hardcoded fallback если env var пуст → подделка токенов
+3. **Tokens в localStorage** — спека требует httpOnly cookies, XSS-уязвимость
+4. **40-50% спеки не реализовано** — scaffold создан, но бизнес-логика во многих модулях пустая (scheduling, video, teacher-dashboard)
+5. **Float вместо Decimal** — в payments используется Number() вместо Decimal (потеря точности)
+6. **Webhook без HMAC** — ЮKassa webhook не проверяет подпись
+7. **Elasticsearch orphaned** — код есть, но нигде не вызывается
+
+**Solution:**
+Это ожидаемый результат для scaffold + first-pass implementation. Blockers нужно фиксить приоритетно:
+1. RegisterDto: убрать ADMIN из допустимых ролей (1 строка)
+2. JWT: убрать fallback, crash на startup если нет ключа
+3. Tokens: перенести в httpOnly cookies
+4. Decimal: заменить Number() на Prisma Decimal
+5. Webhook HMAC: включить верификацию
+Остальное (medium/low) — backlog для следующих итераций.
+
+**References:** docs/features/*/review-report.md (13 отчётов)
+
+---
+
 ## 2026-05-21 — Phase 4 REVIEW (brutal-honesty-review) повторно забыта после ретроактивной генерации docs
 
 **Tags:** feature-pipeline, phase-4-review, brutal-honesty-review, process-compliance
