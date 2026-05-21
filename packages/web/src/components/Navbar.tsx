@@ -72,7 +72,7 @@ export function Navbar() {
                 href="/profile"
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-sm font-medium text-primary-700"
               >
-                {user.name.charAt(0).toUpperCase()}
+                {(user.name || '?').charAt(0).toUpperCase()}
               </Link>
               <button
                 onClick={logout}

@@ -247,7 +247,7 @@ export default function DashboardPage() {
               <Card key={child.id} className="p-5">
                 <div className="flex items-center gap-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-lg font-bold text-primary-700">
-                    {child.name.charAt(0)}
+                    {(child.name || '?').charAt(0)}
                   </div>
                   <div>
                     <p className="text-lg font-semibold text-gray-900">{child.name}</p>
