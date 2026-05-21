@@ -25,6 +25,7 @@ import { SectionsModule } from './modules/sections/sections.module';
     ReviewsModule,
     SearchModule,
     HealthModule,
+    VideoModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

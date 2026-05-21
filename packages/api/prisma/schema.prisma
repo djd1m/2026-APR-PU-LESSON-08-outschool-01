@@ -140,6 +140,7 @@ model Section {
 
   class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
   enrollments Enrollment[]
+  videoRoom   VideoRoom?
 
   @@index([classId])
   @@index([startTime])
@@ -217,6 +218,26 @@ model Achievement {
   @@index([childId])
   @@index([type])
   @@map("achievements")
+}
+
+enum VideoRoomStatus {
+  WAITING
+  ACTIVE
+  CLOSED
+}
+
+model VideoRoom {
+  id        String          @id @default(uuid())
+  sectionId String          @unique @map("section_id")
+  roomName  String          @unique @map("room_name")
+  status    VideoRoomStatus @default(WAITING)
+  createdAt DateTime        @default(now()) @map("created_at")
+  closedAt  DateTime?       @map("closed_at")
+
+  section Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@map("video_rooms")
 }
 
 model Notification {

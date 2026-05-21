@@ -11,9 +11,18 @@ interface Booking {
   id: string;
   classTitle: string;
   classId: string;
+  sectionId: string;
   teacherName: string;
   nextSession: string;
+  nextSessionEnd: string;
   status: 'upcoming' | 'completed' | 'cancelled';
+}
+
+function isClassroomAvailable(nextSession: string): boolean {
+  const startTime = new Date(nextSession).getTime();
+  const now = Date.now();
+  // Button appears 15 minutes before start
+  return startTime - now <= 15 * 60 * 1000;
 }
 
 export default function DashboardPage() {
@@ -109,18 +118,29 @@ export default function DashboardPage() {
                     {booking.teacherName}
                   </p>
                 </div>
-                <div className="text-right">
-                  <Badge variant={statusVariant[booking.status]}>
-                    {statusLabel[booking.status]}
-                  </Badge>
-                  <p className="mt-1 text-sm text-gray-500">
-                    {new Date(booking.nextSession).toLocaleDateString('ru-RU', {
-                      day: 'numeric',
-                      month: 'long',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </p>
+                <div className="flex items-center gap-3">
+                  {booking.status === 'upcoming' && isClassroomAvailable(booking.nextSession) && (
+                    <Link
+                      href={`/classroom/${booking.sectionId}`}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+                    >
+                      <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+                      Войти в класс
+                    </Link>
+                  )}
+                  <div className="text-right">
+                    <Badge variant={statusVariant[booking.status]}>
+                      {statusLabel[booking.status]}
+                    </Badge>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {new Date(booking.nextSession).toLocaleDateString('ru-RU', {
+                        day: 'numeric',
+                        month: 'long',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                  </div>
                 </div>
               </Card>
             ))}

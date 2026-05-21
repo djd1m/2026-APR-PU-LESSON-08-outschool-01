@@ -5,6 +5,7 @@ import { processEmailJob } from './processors/email.processor';
 import { processSearchSyncJob } from './processors/search-sync.processor';
 import { processPayoutJob } from './processors/payout.processor';
 import { processNotificationJob } from './processors/notification.processor';
+import { processVideoRoomCloseJob } from './processors/video-room-close.processor';
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
@@ -82,6 +83,20 @@ function startWorkers(connection: IORedis): Worker[] {
     console.error(`[${QUEUES.NOTIFICATION}] job ${job?.id} failed:`, err.message);
   });
   workers.push(notificationWorker);
+
+  // Video room auto-close worker
+  const videoRoomCloseWorker = new Worker(
+    QUEUES.VIDEO_ROOM_CLOSE,
+    processVideoRoomCloseJob,
+    { connection, concurrency: 3 },
+  );
+  videoRoomCloseWorker.on('completed', (job) => {
+    console.log(`[${QUEUES.VIDEO_ROOM_CLOSE}] job ${job.id} completed`);
+  });
+  videoRoomCloseWorker.on('failed', (job, err) => {
+    console.error(`[${QUEUES.VIDEO_ROOM_CLOSE}] job ${job?.id} failed:`, err.message);
+  });
+  workers.push(videoRoomCloseWorker);
 
   return workers;
 }

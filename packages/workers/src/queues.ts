@@ -3,6 +3,7 @@ export const QUEUES = {
   SEARCH_SYNC: 'search-sync',
   PAYOUT: 'payout',
   NOTIFICATION: 'notification',
+  VIDEO_ROOM_CLOSE: 'video-room-close',
 } as const;
 
 export type QueueName = (typeof QUEUES)[keyof typeof QUEUES];
@@ -61,4 +62,11 @@ export interface NotificationJobData {
   title: string;
   body: string;
   data?: Record<string, unknown>;
+}
+
+// ----- Video room close job types -----
+
+export interface VideoRoomCloseJobData {
+  sectionId: string;
+  roomName: string;
 }
