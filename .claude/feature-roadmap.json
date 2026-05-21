@@ -77,7 +77,7 @@
       "title": "Создание и модерация классов",
       "description": "Учитель создаёт класс (описание, цена, расписание, возраст), админ модерирует",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E2",
       "stories": [
         "US-T02",
@@ -86,7 +86,9 @@
       "depends_on": [
         "teacher-profiles"
       ],
-      "estimated_effort": "M"
+      "estimated_effort": "M",
+      "number": 5,
+      "branch": "feature/005-class-creation"
     },
     {
       "id": "trial-booking",
