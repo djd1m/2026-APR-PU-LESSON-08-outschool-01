@@ -147,7 +147,7 @@
       "title": "Видеоклассы (Jitsi Meet)",
       "description": "Self-hosted Jitsi: создание комнат, enrollment-only доступ, auto-close, parent notify",
       "priority": "mvp",
-      "status": "planned",
+      "status": "done",
       "epic": "E4",
       "stories": [
         "US-P07",
@@ -158,7 +158,9 @@
         "payment-integration",
         "scheduling"
       ],
-      "estimated_effort": "XL"
+      "estimated_effort": "XL",
+      "number": 9,
+      "branch": "feature/009-video-classroom"
     },
     {
       "id": "reviews-ratings",
