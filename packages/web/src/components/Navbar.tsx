@@ -41,6 +41,12 @@ export function Navbar() {
                 Мои занятия
               </Link>
               <Link
+                href="/bookings"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Мои записи
+              </Link>
+              <Link
                 href="/profile"
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-sm font-medium text-primary-700"
               >

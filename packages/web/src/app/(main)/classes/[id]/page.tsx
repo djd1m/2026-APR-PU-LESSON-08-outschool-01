@@ -1,8 +1,16 @@
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { TrialBookingCard } from '@/components/TrialBookingCard';
+
+interface Section {
+  id: string;
+  startTime: string;
+  endTime: string;
+  maxStudents: number;
+  enrolledCount: number;
+}
 
 interface ClassDetail {
   id: string;
@@ -25,6 +33,7 @@ interface ClassDetail {
     rating: number;
     totalStudents: number;
   };
+  sections: Section[];
   schedule: Array<{
     dayOfWeek: string;
     time: string;
@@ -181,17 +190,12 @@ export default async function ClassDetailPage({
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Booking card */}
-          <Card className="sticky top-8 p-6">
-            <p className="text-3xl font-bold text-gray-900">
-              от {cls.pricePerSession.toLocaleString('ru-RU')} &#8381;
-            </p>
-            <p className="text-sm text-gray-500">за занятие</p>
-            <Button className="mt-6 w-full">Записаться</Button>
-            <p className="mt-3 text-center text-xs text-gray-400">
-              Бесплатная отмена за 24 часа
-            </p>
-          </Card>
+          {/* Booking card with trial + paid enrollment */}
+          <TrialBookingCard
+            classId={cls.id}
+            pricePerSession={cls.pricePerSession}
+            sections={cls.sections || []}
+          />
 
           {/* Teacher card */}
           <Card className="p-6">

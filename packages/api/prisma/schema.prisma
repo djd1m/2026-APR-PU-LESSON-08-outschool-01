@@ -148,6 +148,7 @@ model Enrollment {
   childId     String           @map("child_id")
   sectionId   String           @map("section_id")
   status      EnrollmentStatus @default(PENDING)
+  isTrial     Boolean          @default(false) @map("is_trial")
   enrolledAt  DateTime         @default(now()) @map("enrolled_at")
   completedAt DateTime?        @map("completed_at")
   cancelledAt DateTime?        @map("cancelled_at")
