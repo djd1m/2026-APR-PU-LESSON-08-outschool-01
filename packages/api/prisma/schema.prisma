@@ -196,12 +196,15 @@ model Review {
   enrollmentId String   @unique @map("enrollment_id")
   rating       Int      @db.SmallInt
   comment      String?
+  flagged      Boolean  @default(false)
+  flagReason   String?  @map("flag_reason")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
 
   @@index([rating])
+  @@index([flagged])
   @@map("reviews")
 }
 

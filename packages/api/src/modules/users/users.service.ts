@@ -4,7 +4,10 @@ import { UpdateTeacherDto } from './dto/update-teacher.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(
+    private usersRepository: UsersRepository,
+    private prisma: PrismaService,
+  ) {}
 
   async findById(id: string) {
     const user = await this.usersRepository.findById(id);

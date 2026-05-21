@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { apiFetch } from '@/lib/api';
 
-interface Booking {
-  id: string;
-  classTitle: string;
+type TabId = 'schedule' | 'progress' | 'payments' | 'children';
+
+interface UpcomingClass {
+  enrollmentId: string;
   classId: string;
   sectionId: string;
   teacherName: string;
@@ -27,15 +29,16 @@ function isClassroomAvailable(nextSession: string): boolean {
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading } = useAuth();
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [activeTab, setActiveTab] = useState<TabId>('schedule');
+  const [data, setData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
 
-    apiFetch<{ data: Booking[] }>('/bookings/my')
-      .then((res) => setBookings(res.data))
-      .catch(() => setBookings([]))
+    apiFetch<DashboardData>('/users/dashboard')
+      .then(setData)
+      .catch(() => setData(null))
       .finally(() => setIsLoading(false));
   }, [user]);
 
@@ -64,16 +67,11 @@ export default function DashboardPage() {
     );
   }
 
-  const statusLabel: Record<Booking['status'], string> = {
-    upcoming: 'Предстоит',
-    completed: 'Завершено',
-    cancelled: 'Отменено',
-  };
-
-  const statusVariant: Record<Booking['status'], 'primary' | 'secondary'> = {
-    upcoming: 'primary',
-    completed: 'secondary',
-    cancelled: 'secondary',
+  const paymentStatusLabel: Record<string, string> = {
+    PENDING: 'Ожидание',
+    PROCESSING: 'Обработка',
+    COMPLETED: 'Оплачено',
+    REFUNDED: 'Возврат',
   };
 
   return (
@@ -81,9 +79,49 @@ export default function DashboardPage() {
       <h1 className="text-3xl font-bold text-gray-900">
         Привет, {user.name}!
       </h1>
-      <p className="mt-2 text-gray-600">Ваши записи на занятия</p>
+      <p className="mt-2 text-gray-600">Личный кабинет родителя</p>
 
-      <div className="mt-8">
+      {/* Summary cards */}
+      {data && (
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Card className="p-5 text-center">
+            <p className="text-2xl font-bold text-gray-900">{data.upcomingClasses.length}</p>
+            <p className="mt-1 text-sm text-gray-500">Предстоящих занятий</p>
+          </Card>
+          <Card className="p-5 text-center">
+            <p className="text-2xl font-bold text-gray-900">
+              {data.totalSpent.toLocaleString('ru-RU')} &#8381;
+            </p>
+            <p className="mt-1 text-sm text-gray-500">Потрачено</p>
+          </Card>
+          <Card className="p-5 text-center">
+            <p className="text-2xl font-bold text-gray-900">{data.childrenCount}</p>
+            <p className="mt-1 text-sm text-gray-500">Детей</p>
+          </Card>
+        </div>
+      )}
+
+      {/* Tab navigation */}
+      <div className="mt-8 border-b border-gray-200">
+        <nav className="flex gap-6">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`pb-3 text-sm font-medium transition-colors border-b-2 ${
+                activeTab === tab.id
+                  ? 'border-primary-600 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Tab content */}
+      <div className="mt-6">
         {isLoading ? (
           <div className="space-y-4">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -93,15 +131,9 @@ export default function DashboardPage() {
               />
             ))}
           </div>
-        ) : bookings.length === 0 ? (
+        ) : !data ? (
           <Card className="p-8 text-center">
-            <p className="text-lg text-gray-500">У вас пока нет записей</p>
-            <Link
-              href="/classes"
-              className="mt-4 inline-block text-primary-600 hover:underline"
-            >
-              Посмотреть каталог занятий
-            </Link>
+            <p className="text-gray-500">Не удалось загрузить данные</p>
           </Card>
         ) : (
           <div className="space-y-4">

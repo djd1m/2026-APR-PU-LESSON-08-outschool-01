@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ReviewsRepository } from './reviews.repository';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CreateReviewDto } from './dto/create-review.dto';
 
 @Injectable()
 export class ReviewsService {
@@ -14,16 +15,28 @@ export class ReviewsService {
     private prisma: PrismaService,
   ) {}
 
-  async create(enrollmentId: string, rating: number, comment?: string) {
+  async create(parentId: string, dto: CreateReviewDto) {
+    const { enrollmentId, rating, comment } = dto;
+
     if (rating < 1 || rating > 5) {
       throw new BadRequestException('Rating must be between 1 and 5');
     }
 
+    if (comment && comment.length > 2000) {
+      throw new BadRequestException('Comment must not exceed 2000 characters');
+    }
+
     const enrollment = await this.prisma.enrollment.findUnique({
       where: { id: enrollmentId },
+      include: { child: true },
     });
     if (!enrollment) {
       throw new NotFoundException('Enrollment not found');
+    }
+
+    // Verify the parent owns this enrollment
+    if (enrollment.child.parentId !== parentId) {
+      throw new BadRequestException('You can only review your own enrollments');
     }
 
     if (enrollment.status !== 'COMPLETED' && enrollment.status !== 'ACTIVE') {
@@ -73,6 +86,49 @@ export class ReviewsService {
       skip,
       take: perPage,
       where: { enrollment: { section: { classId } } },
+    });
+
+    return {
+      items,
+      meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) },
+    };
+  }
+
+  async findByTeacher(teacherId: string, page = 1, perPage = 20) {
+    const skip = (page - 1) * perPage;
+    const { items, total } = await this.reviewsRepository.findAll({
+      skip,
+      take: perPage,
+      where: { enrollment: { section: { class: { teacherId } } } },
+    });
+
+    return {
+      items,
+      meta: { page, perPage, total, totalPages: Math.ceil(total / perPage) },
+    };
+  }
+
+  async flagForModeration(reviewId: string, reason?: string) {
+    const review = await this.findById(reviewId);
+    return this.reviewsRepository.update(review.id, {
+      flagged: true,
+      flagReason: reason || 'Flagged for moderation',
+    });
+  }
+
+  async unflag(reviewId: string) {
+    const review = await this.findById(reviewId);
+    return this.reviewsRepository.update(review.id, {
+      flagged: false,
+      flagReason: null,
+    });
+  }
+
+  async findFlagged(page = 1, perPage = 20) {
+    const skip = (page - 1) * perPage;
+    const { items, total } = await this.reviewsRepository.findFlagged({
+      skip,
+      take: perPage,
     });
 
     return {
