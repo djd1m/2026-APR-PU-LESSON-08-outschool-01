@@ -91,5 +91,12 @@ packages/
 4. **Видео-инфраструктура** — Jitsi self-hosted требует мощные серверы
 5. **Конкуренция с Skyeng/Фоксфорд** — они subscription, мы marketplace
 
+## Post-Agent Insight Capture (ОБЯЗАТЕЛЬНО)
+После завершения КАЖДОГО агента (Agent tool completion):
+1. Проанализируй результат на наличие неочевидных находок
+2. Если есть инсайт (баг, workaround, неожиданное поведение) — добавь в `.claude/insights/index.md`
+3. `git add .claude/insights/ && git commit -m "docs(insights): ..." && git push`
+4. НЕ откладывай на конец сессии — фиксируй сразу
+
 ## Development Insights
 См. `.claude/insights/index.md`

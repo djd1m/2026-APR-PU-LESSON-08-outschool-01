@@ -18,6 +18,18 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/post-agent-insights.cjs",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "matcher": "*",
