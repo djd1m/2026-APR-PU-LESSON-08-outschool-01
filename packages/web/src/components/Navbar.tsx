@@ -54,6 +54,14 @@ export function Navbar() {
               >
                 Мои занятия
               </Link>
+              {user.role === 'teacher' && (
+                <Link
+                  href="/teach/schedule"
+                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Расписание
+                </Link>
+              )}
               <Link
                 href="/bookings"
                 className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
