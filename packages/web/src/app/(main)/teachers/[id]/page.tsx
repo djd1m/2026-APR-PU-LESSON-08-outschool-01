@@ -78,12 +78,12 @@ function Avatar({
     );
   }
 
-  const initials = name
+  const initials = (name || '?')
     .split(' ')
     .map((w) => w.charAt(0))
     .join('')
     .slice(0, 2)
-    .toUpperCase();
+    .toUpperCase() || '?';
 
   return (
     <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary-100 text-3xl font-bold text-primary-700 border-4 border-white shadow-md">
@@ -111,8 +111,24 @@ export default function TeacherProfilePage() {
 
   useEffect(() => {
     setIsLoading(true);
-    apiFetch<TeacherProfile>(`/teachers/${id}`)
-      .then(setProfile)
+    apiFetch<any>(`/teachers/${id}`)
+      .then((data) => {
+        // Normalize: mock API may return user.name instead of name at top level
+        const normalized: TeacherProfile = {
+          ...data,
+          name: data.name || data.user?.name || 'Преподаватель',
+          avatarUrl: data.avatarUrl || data.user?.avatarUrl || null,
+          subjects: data.subjects || [],
+          classes: data.classes || [],
+          reviews: data.reviews || [],
+          rating: data.rating ?? 0,
+          reviewCount: data.reviewCount ?? 0,
+          totalStudents: data.totalStudents ?? 0,
+          totalClasses: data.totalClasses ?? data.classesCount ?? 0,
+          memberSince: data.memberSince || data.createdAt || new Date().toISOString(),
+        };
+        setProfile(normalized);
+      })
       .catch((err) => setError(err.message || 'Failed to load profile'))
       .finally(() => setIsLoading(false));
   }, [id]);
