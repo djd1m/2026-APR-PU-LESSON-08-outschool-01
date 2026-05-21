@@ -127,7 +127,8 @@ export default function TeacherSchedulePage() {
     } finally {
       setIsLoading(false);
     }
-  }, [user, weekStart, weekEnd]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, weekStart.getTime()]);
 
   // Fetch teacher's classes for the dropdown
   const fetchClasses = useCallback(async () => {
