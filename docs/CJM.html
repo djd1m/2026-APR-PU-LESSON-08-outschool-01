@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CJM: Путь родителя — Онлайн-маркетплейс занятий для детей</title>
+<style>
+  :root {
+    --blue-primary: #1a73e8;
+    --blue-dark: #0d47a1;
+    --blue-light: #e8f0fe;
+    --blue-mid: #4a90d9;
+    --green: #1e8e3e;
+    --green-bg: #e6f4ea;
+    --red: #d93025;
+    --red-bg: #fce8e6;
+    --gray-50: #f8f9fa;
+    --gray-100: #f1f3f4;
+    --gray-200: #e8eaed;
+    --gray-300: #dadce0;
+    --gray-500: #9aa0a6;
+    --gray-700: #5f6368;
+    --gray-900: #202124;
+    --orange: #e8710a;
+    --orange-bg: #fef7e0;
+    --purple: #7b1fa2;
+    --purple-bg: #f3e8fd;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.1), 0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+    color: var(--gray-900);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-primary) 40%, #4285f4 100%);
+    color: white;
+    padding: 40px 32px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: 10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,.05) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -.5px;
+    margin-bottom: 6px;
+  }
+  .header .subtitle {
+    font-size: 15px;
+    opacity: .85;
+    font-weight: 400;
+    max-width: 700px;
+  }
+  .header .badge {
+    display: inline-block;
+    background: rgba(255,255,255,.18);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.2);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 12px;
+    letter-spacing: .3px;
+  }
+
+  /* ── METRICS BAR ── */
+  .metrics-bar {
+    max-width: 1400px;
+    margin: -20px auto 0;
+    padding: 0 32px;
+    position: relative;
+    z-index: 2;
+  }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    padding: 20px 24px;
+  }
+  .metric-item {
+    text-align: center;
+    padding: 8px 4px;
+    border-right: 1px solid var(--gray-200);
+  }
+  .metric-item:last-child { border-right: none; }
+  .metric-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--blue-primary);
+    line-height: 1.2;
+  }
+  .metric-label {
+    font-size: 11px;
+    color: var(--gray-700);
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+
+  /* ── LEGEND ── */
+  .legend-section {
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 0 32px;
+  }
+  .legend-box {
+    background: white;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    padding: 14px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    font-size: 13px;
+    color: var(--gray-700);
+  }
+  .legend-box .legend-title {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .legend-dot.pain { background: var(--red); }
+  .legend-dot.opp { background: var(--green); }
+  .legend-dot.micro { background: var(--purple); }
+  .legend-dot.emotion { background: var(--orange); }
+  .legend-dot.touch { background: var(--blue-primary); }
+
+  /* ── EMOTION CURVE ── */
+  .emotion-section {
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 0 32px;
+  }
+  .emotion-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 24px 28px 16px;
+  }
+  .emotion-card h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .emotion-svg-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .emotion-svg-wrap svg {
+    display: block;
+    width: 100%;
+    min-width: 800px;
+    height: auto;
+  }
+
+  /* ── STAGES CONTAINER ── */
+  .stages-section {
+    max-width: 1400px;
+    margin: 28px auto 0;
+    padding: 0 32px 40px;
+  }
+  .stages-section > h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--gray-900);
+  }
+  .stages-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 16px;
+  }
+  .stages-scroll::-webkit-scrollbar {
+    height: 8px;
+  }
+  .stages-scroll::-webkit-scrollbar-track {
+    background: var(--gray-200);
+    border-radius: 4px;
+  }
+  .stages-scroll::-webkit-scrollbar-thumb {
+    background: var(--blue-mid);
+    border-radius: 4px;
+  }
+
+  /* ── STAGE CARD ── */
+  .stage-card {
+    flex: 0 0 340px;
+    scroll-snap-align: start;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .stage-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+  .stage-head {
+    padding: 20px 20px 14px;
+    background: linear-gradient(135deg, var(--blue-primary), var(--blue-dark));
+    color: white;
+    position: relative;
+  }
+  .stage-num {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 42px;
+    font-weight: 900;
+    opacity: .15;
+    line-height: 1;
+  }
+  .stage-head h3 {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .stage-head .stage-subtitle {
+    font-size: 12px;
+    opacity: .8;
+    margin-top: 2px;
+  }
+  .stage-body {
+    padding: 16px 20px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Block styles inside cards */
+  .block-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .block-title.actions-t { color: var(--blue-dark); }
+  .block-title.touch-t { color: var(--blue-primary); }
+  .block-title.emotion-t { color: var(--orange); }
+  .block-title.micro-t { color: var(--purple); }
+  .block-title.pain-t { color: var(--red); }
+  .block-title.opp-t { color: var(--green); }
+
+  .block-list {
+    list-style: none;
+    font-size: 13px;
+    color: var(--gray-700);
+  }
+  .block-list li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 4px;
+    line-height: 1.45;
+  }
+  .block-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gray-300);
+  }
+  .block-list.touch li::before { background: var(--blue-primary); }
+
+  .emotion-block {
+    background: var(--orange-bg);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--gray-900);
+  }
+  .emotion-block .emoji {
+    font-size: 18px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  .micro-block {
+    background: var(--purple-bg);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--gray-900);
+    border-left: 3px solid var(--purple);
+  }
+
+  .pain-block {
+    background: var(--red-bg);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  .pain-block .block-list li::before { background: var(--red); }
+  .pain-block .block-list { color: #6e1610; }
+
+  .opp-block {
+    background: var(--green-bg);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  .opp-block .block-list li::before { background: var(--green); }
+  .opp-block .block-list { color: #0d652d; }
+
+  .source-link {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--blue-primary);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--blue-mid);
+    margin-top: 4px;
+    transition: color .15s;
+  }
+  .source-link:hover {
+    color: var(--blue-dark);
+    border-bottom-style: solid;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--gray-900);
+    color: var(--gray-500);
+    padding: 32px;
+    margin-top: 20px;
+  }
+  .footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .footer h3 {
+    font-size: 14px;
+    color: white;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .footer-sources {
+    list-style: decimal inside;
+    font-size: 12px;
+    line-height: 2;
+  }
+  .footer-sources a {
+    color: var(--blue-mid);
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .footer-sources a:hover { color: #82b1ff; }
+  .footer-note {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #3c4043;
+    font-size: 11px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .header { padding: 28px 20px 24px; }
+    .header h1 { font-size: 22px; }
+    .metrics-bar, .legend-section, .emotion-section, .stages-section { padding: 0 16px; }
+    .metrics-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 14px 16px;
+    }
+    .metric-item:nth-child(3) { border-right: none; }
+    .stage-card { flex: 0 0 300px; }
+    .legend-box { gap: 12px; font-size: 12px; }
+  }
+  @media (max-width: 600px) {
+    .metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .metric-item:nth-child(2n) { border-right: none; }
+    .metric-item:nth-child(3) { border-right: 1px solid var(--gray-200); }
+    .stage-card { flex: 0 0 280px; }
+    .header h1 { font-size: 19px; }
+  }
+
+  /* connector arrows between cards */
+  .stage-connector {
+    flex: 0 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    color: var(--blue-mid);
+    font-size: 20px;
+    opacity: .5;
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ HEADER ════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <h1>Customer Journey Map: Путь родителя</h1>
+    <p class="subtitle">Онлайн-маркетплейс живых занятий для детей 3-18 лет — российский аналог Outschool.com (веб-приложение)</p>
+    <span class="badge">7 этапов &middot; от осознания потребности до адвокации &middot; 2026</span>
+  </div>
+</header>
+
+<!-- ════════════════ METRICS ════════════════ -->
+<div class="metrics-bar">
+  <div class="metrics-grid">
+    <div class="metric-item">
+      <div class="metric-value">154 млрд &#8381;</div>
+      <div class="metric-label">Рынок EdTech в России, 2026</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-value">43%</div>
+      <div class="metric-label">Родителей 7-11 кл. нанимают репетиторов</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-value">+60%</div>
+      <div class="metric-label">Вовлечённость при AI-персонализации</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-value">+45%</div>
+      <div class="metric-label">Результаты при геймификации</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-value">75-80%</div>
+      <div class="metric-label">Завершаемость микрообучения</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ LEGEND ════════════════ -->
+<div class="legend-section">
+  <div class="legend-box">
+    <span class="legend-title">Легенда:</span>
+    <span class="legend-item"><span class="legend-dot touch"></span> Точки контакта</span>
+    <span class="legend-item"><span class="legend-dot emotion"></span> Эмоции</span>
+    <span class="legend-item"><span class="legend-dot micro"></span> Микротренды</span>
+    <span class="legend-item"><span class="legend-dot pain"></span> Болевые точки</span>
+    <span class="legend-item"><span class="legend-dot opp"></span> Возможности</span>
+  </div>
+</div>
+
+<!-- ════════════════ EMOTION CURVE ════════════════ -->
+<div class="emotion-section">
+  <div class="emotion-card">
+    <h2>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 14 Q5 10, 6 12 Q7 14, 8.5 6 Q10 2, 11.5 4 Q13 8, 14.5 6 Q16 4, 17 3 Q18 2, 18 3" stroke="#e8710a" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+      Кривая эмоций родителя
+    </h2>
+    <div class="emotion-svg-wrap">
+      <svg viewBox="0 0 980 170" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <!-- grid -->
+        <defs>
+          <linearGradient id="curveGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#e8710a"/>
+            <stop offset="50%" stop-color="#d93025"/>
+            <stop offset="75%" stop-color="#1e8e3e"/>
+            <stop offset="100%" stop-color="#1a73e8"/>
+          </linearGradient>
+          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e8710a" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="#e8710a" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- horizontal guides -->
+        <line x1="50" y1="30" x2="940" y2="30" stroke="#e8eaed" stroke-dasharray="4"/>
+        <line x1="50" y1="70" x2="940" y2="70" stroke="#e8eaed" stroke-dasharray="4"/>
+        <line x1="50" y1="110" x2="940" y2="110" stroke="#e8eaed" stroke-dasharray="4"/>
+        <line x1="50" y1="145" x2="940" y2="145" stroke="#e8eaed"/>
+        <!-- labels left -->
+        <text x="10" y="34" fill="#9aa0a6" font-size="10" font-family="sans-serif">Восторг</text>
+        <text x="10" y="74" fill="#9aa0a6" font-size="10" font-family="sans-serif">Позитив</text>
+        <text x="10" y="114" fill="#9aa0a6" font-size="10" font-family="sans-serif">Нейтрал</text>
+        <text x="10" y="149" fill="#9aa0a6" font-size="10" font-family="sans-serif">Стресс</text>
+
+        <!-- area under curve -->
+        <path d="M110,105 C155,130 185,135 240,130 C295,125 310,100 370,85 C410,76 430,50 500,40 C540,35 570,68 630,72 C680,75 700,58 760,50 C800,45 830,32 890,28 L890,145 L110,145 Z" fill="url(#areaGrad)"/>
+
+        <!-- the curve: medium → low → rising → peak → stable → rising → peak -->
+        <!-- 1:medium(105) 2:low(130) 3:rising(85) 4:peak(40) 5:stable(72) 6:rising(50) 7:peak(28) -->
+        <path d="M110,105 C155,130 185,135 240,130 C295,125 310,100 370,85 C410,76 430,50 500,40 C540,35 570,68 630,72 C680,75 700,58 760,50 C800,45 830,32 890,28"
+              fill="none" stroke="url(#curveGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- dots + labels -->
+        <!-- 1 -->
+        <circle cx="110" cy="105" r="6" fill="white" stroke="#e8710a" stroke-width="2.5"/>
+        <text x="110" y="160" text-anchor="middle" fill="#5f6368" font-size="9.5" font-family="sans-serif" font-weight="600">1. Осознание</text>
+        <text x="110" y="97" text-anchor="middle" font-size="14">&#x1F914;</text>
+        <!-- 2 -->
+        <circle cx="240" cy="130" r="6" fill="white" stroke="#d93025" stroke-width="2.5"/>
+        <text x="240" y="160" text-anchor="middle" fill="#5f6368" font-size="9.5" font-family="sans-serif" font-weight="600">2. Исследование</text>
+        <text x="240" y="122" text-anchor="middle" font-size="14">&#x1F629;</text>
+        <!-- 3 -->
+        <circle cx="370" cy="85" r="6" fill="white" stroke="#e8710a" stroke-width="2.5"/>
+        <text x="370" y="160" text-anchor="middle" fill="#5f6368" font-size="9.5" font-family="sans-serif" font-weight="600">3. Регистрация</text>
+        <text x="370" y="77" text-anchor="middle" font-size="14">&#x1F9D0;</text>
+        <!-- 4 -->
+        <circle cx="500" cy="40" r="6" fill="white" stroke="#1e8e3e" stroke-width="2.5"/>
+        <text x="500" y="160" text-anchor="middle" fill="#5f6368" font-size="9.5" font-family="sans-serif" font-weight="600">4. Первое занятие</text>
+        <text x="500" y="32" text-anchor="middle" font-size="14">&#x1F929;</text>
+        <!-- 5 -->
+        <circle cx="630" cy="72" r="6" fill="white" stroke="#e8710a" stroke-width="2.5"/>
+        <text x="630" y="160" text-anchor="middle" fill="#5f6368" font-size="9.5" font-family="sans-serif" font-weight="600">5. Регулярное исп.</text>
+        <text x="630" y="64" text-anchor="middle" font-size="14">&#x1F60C;</text>
+        <!-- 6 -->
+        <circle cx="760" cy="50" r="6" fill="white" stroke="#1a73e8" stroke-width="2.5"/>
+        <text x="760" y="160" text-anchor="middle" fill="#5f6368" font-size="9.5" font-family="sans-serif" font-weight="600">6. Лояльность</text>
+        <text x="760" y="42" text-anchor="middle" font-size="14">&#x1F60D;</text>
+        <!-- 7 -->
+        <circle cx="890" cy="28" r="6" fill="white" stroke="#1a73e8" stroke-width="2.5"/>
+        <text x="890" y="160" text-anchor="middle" fill="#5f6368" font-size="9.5" font-family="sans-serif" font-weight="600">7. Адвокация</text>
+        <text x="890" y="20" text-anchor="middle" font-size="14">&#x1F31F;</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ STAGES ════════════════ -->
+<div class="stages-section">
+  <h2>Этапы пути родителя</h2>
+  <div class="stages-scroll" id="stagesScroll">
+
+    <!-- ── STAGE 1 ── -->
+    <div class="stage-card">
+      <div class="stage-head">
+        <span class="stage-num">1</span>
+        <h3>Осознание потребности</h3>
+        <div class="stage-subtitle">Awareness / Need Recognition</div>
+      </div>
+      <div class="stage-body">
+        <div>
+          <div class="block-title actions-t">&#9654; Действия</div>
+          <ul class="block-list">
+            <li>Ребёнок отстаёт в школе или нужна доп. подготовка</li>
+            <li>Поиск альтернативы летнему лагерю / офлайн-кружкам</li>
+            <li>Потребность в обогащении (языки, программирование, творчество)</li>
+            <li>Переход на домашнее обучение</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-title touch-t">&#128204; Точки контакта</div>
+          <ul class="block-list touch">
+            <li>Рекомендации знакомых (сарафанное радио)</li>
+            <li>VK, YouTube, родительские форумы</li>
+            <li>Поисковики — Яндекс, Google</li>
+          </ul>
+        </div>
+        <div class="emotion-block">
+          <div class="block-title emotion-t">&#127751; Эмоции</div>
+          <span class="emoji">&#x1F914;</span> Беспокойство за образование ребёнка, растерянность от обилия вариантов
+        </div>
+        <div class="micro-block">
+          <div class="block-title micro-t">&#128300; Микротренд</div>
+          AI-рекомендации в родительских сообществах, короткие видеообзоры (VK Clips, YouTube Shorts)
+        </div>
+        <div class="pain-block">
+          <div class="block-title pain-t">&#10060; Болевые точки</div>
+          <ul class="block-list">
+            <li>Слишком много вариантов, невозможно выбрать</li>
+            <li>Недоверие к онлайн-образованию</li>
+          </ul>
+        </div>
+        <div class="opp-block">
+          <div class="block-title opp-t">&#9989; Возможности</div>
+          <ul class="block-list">
+            <li>SEO-контент на Яндекс (статьи, гайды)</li>
+            <li>Таргетированная реклама в VK по интересам</li>
+            <li>Партнёрство с родительскими блогерами</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-connector">&#9654;</div>
+
+    <!-- ── STAGE 2 ── -->
+    <div class="stage-card">
+      <div class="stage-head">
+        <span class="stage-num">2</span>
+        <h3>Исследование и сравнение</h3>
+        <div class="stage-subtitle">Research &amp; Comparison</div>
+      </div>
+      <div class="stage-body">
+        <div>
+          <div class="block-title actions-t">&#9654; Действия</div>
+          <ul class="block-list">
+            <li>Поиск &laquo;онлайн занятия для детей&raquo; в Яндекс/Google</li>
+            <li>Чтение отзывов и обзоров платформ</li>
+            <li>Сравнение цен: Skyeng, Skysmart, Tetrika</li>
+            <li>Просмотр видеообзоров от реальных родителей</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-title touch-t">&#128204; Точки контакта</div>
+          <ul class="block-list touch">
+            <li>Лендинг / главная страница платформы</li>
+            <li>Статьи-сравнения, рейтинги</li>
+            <li>VK-группы, YouTube-обзоры</li>
+          </ul>
+        </div>
+        <div class="emotion-block">
+          <div class="block-title emotion-t">&#127751; Эмоции</div>
+          <span class="emoji">&#x1F629;</span> Информационная перегрузка, скептицизм (&laquo;все обещают одно и то же&raquo;)
+        </div>
+        <div class="micro-block">
+          <div class="block-title micro-t">&#128300; Микротренд</div>
+          AI-инструменты сравнения платформ, UGC-видеоотзывы от родителей, агрегаторы рейтингов
+          <br><a href="https://www.trustpilot.com/review/outschool.com" target="_blank" rel="noopener" class="source-link">Outschool Trustpilot 4.5/5 (3 210 отзывов) &#8599;</a>
+        </div>
+        <div class="pain-block">
+          <div class="block-title pain-t">&#10060; Болевые точки</div>
+          <ul class="block-list">
+            <li>Сложно сравнить качество занятий между платформами</li>
+            <li>Нет единого стандарта оценки преподавателей</li>
+          </ul>
+        </div>
+        <div class="opp-block">
+          <div class="block-title opp-t">&#9989; Возможности</div>
+          <ul class="block-list">
+            <li>Прозрачное ценообразование без скрытых платежей</li>
+            <li>Бесплатные пробные уроки</li>
+            <li>Секция реальных отзывов от родителей</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-connector">&#9654;</div>
+
+    <!-- ── STAGE 3 ── -->
+    <div class="stage-card">
+      <div class="stage-head">
+        <span class="stage-num">3</span>
+        <h3>Регистрация и первый визит</h3>
+        <div class="stage-subtitle">Registration &amp; First Visit</div>
+      </div>
+      <div class="stage-body">
+        <div>
+          <div class="block-title actions-t">&#9654; Действия</div>
+          <ul class="block-list">
+            <li>Регистрация через email / VK ID / Яндекс ID</li>
+            <li>Создание профиля ребёнка (возраст, интересы)</li>
+            <li>Первое знакомство с каталогом (140 000+ занятий)</li>
+            <li>Использование фильтров и поиска</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-title touch-t">&#128204; Точки контакта</div>
+          <ul class="block-list touch">
+            <li>Форма регистрации</li>
+            <li>Онбординг-визард</li>
+            <li>Каталог, поиск, фильтры</li>
+          </ul>
+        </div>
+        <div class="emotion-block">
+          <div class="block-title emotion-t">&#127751; Эмоции</div>
+          <span class="emoji">&#x1F9D0;</span> Любопытство + осторожность (&laquo;а это вообще работает?&raquo;)
+        </div>
+        <div class="micro-block">
+          <div class="block-title micro-t">&#128300; Микротренд</div>
+          Упрощённый вход через VK ID / Яндекс ID, AI-анкета при онбординге (возраст, интересы, цели) с мгновенным показом персональных рекомендаций
+          <br><a href="https://support.outschool.com/en/articles/3570276-new-teacher-faq" target="_blank" rel="noopener" class="source-link">Outschool: процесс регистрации &#8599;</a>
+        </div>
+        <div class="pain-block">
+          <div class="block-title pain-t">&#10060; Болевые точки</div>
+          <ul class="block-list">
+            <li>Сложная навигация (жалобы пользователей Outschool)</li>
+            <li>Огромный каталог перегружает без персонализации</li>
+          </ul>
+        </div>
+        <div class="opp-block">
+          <div class="block-title opp-t">&#9989; Возможности</div>
+          <ul class="block-list">
+            <li>Умный онбординг-квиз &rarr; персональная лента с первого дня</li>
+            <li>Вход в 1 клик через соцсети</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-connector">&#9654;</div>
+
+    <!-- ── STAGE 4 ── -->
+    <div class="stage-card">
+      <div class="stage-head" style="background: linear-gradient(135deg, #1e8e3e, #0d652d);">
+        <span class="stage-num">4</span>
+        <h3>Первое занятие</h3>
+        <div class="stage-subtitle">First Class Experience</div>
+      </div>
+      <div class="stage-body">
+        <div>
+          <div class="block-title actions-t">&#9654; Действия</div>
+          <ul class="block-list">
+            <li>Выбор пробного/бесплатного занятия</li>
+            <li>Бронирование и оплата ($10-30/час)</li>
+            <li>Подготовка ребёнка, подключение к видео</li>
+            <li>Прохождение урока, заполнение опроса после</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-title touch-t">&#128204; Точки контакта</div>
+          <ul class="block-list touch">
+            <li>Форма бронирования и оплаты</li>
+            <li>Интеграция с календарём</li>
+            <li>Видеокласс (Zoom-подобный)</li>
+            <li>Опрос после занятия</li>
+          </ul>
+        </div>
+        <div class="emotion-block">
+          <div class="block-title emotion-t">&#127751; Эмоции</div>
+          <span class="emoji">&#x1F929;</span> Волнение + тревога (&laquo;понравится ли ребёнку?&raquo;), облегчение при успешном уроке &mdash; <strong>пик позитива</strong>
+        </div>
+        <div class="micro-block">
+          <div class="block-title micro-t">&#128300; Микротренд</div>
+          Модель &laquo;Первый урок бесплатно&raquo;, AI-подбор преподавателя, дашборд для родителей с оценкой вовлечённости ребёнка в реальном времени
+          <br><a href="https://www.todaysparent.com/kids/school-age/outschool-review/" target="_blank" rel="noopener" class="source-link">Today's Parent: обзор Outschool &#8599;</a>
+        </div>
+        <div class="pain-block">
+          <div class="block-title pain-t">&#10060; Болевые точки</div>
+          <ul class="block-list">
+            <li>Путаница с кредитной системой оплаты</li>
+            <li>Проблемы с часовыми поясами</li>
+            <li>Технические сбои при подключении</li>
+          </ul>
+        </div>
+        <div class="opp-block">
+          <div class="block-title opp-t">&#9989; Возможности</div>
+          <ul class="block-list">
+            <li>Бронирование в 1 клик, пробный без карты</li>
+            <li>Московское время по умолчанию</li>
+            <li>Тест соединения перед уроком</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-connector">&#9654;</div>
+
+    <!-- ── STAGE 5 ── -->
+    <div class="stage-card">
+      <div class="stage-head">
+        <span class="stage-num">5</span>
+        <h3>Регулярное использование</h3>
+        <div class="stage-subtitle">Regular Usage / Engagement</div>
+      </div>
+      <div class="stage-body">
+        <div>
+          <div class="block-title actions-t">&#9654; Действия</div>
+          <ul class="block-list">
+            <li>Запись на регулярные / повторяющиеся занятия</li>
+            <li>Отслеживание прогресса ребёнка</li>
+            <li>Переписка с преподавателями</li>
+            <li>Управление платежами и расписанием</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-title touch-t">&#128204; Точки контакта</div>
+          <ul class="block-list touch">
+            <li>Личный кабинет / дашборд</li>
+            <li>Отчёты о прогрессе</li>
+            <li>Push/email-уведомления</li>
+            <li>Чат с преподавателем</li>
+          </ul>
+        </div>
+        <div class="emotion-block">
+          <div class="block-title emotion-t">&#127751; Эмоции</div>
+          <span class="emoji">&#x1F60C;</span> Удовлетворение при прогрессе ребёнка, раздражение при нестабильном качестве
+        </div>
+        <div class="micro-block">
+          <div class="block-title micro-t">&#128300; Микротренд</div>
+          AI-аналитика прогресса, предсказание оттока за 2-3 недели (+60% вовлечённости). Геймификация для детей (бейджи, серии, уровни, +45% результатов). Микрообучение 2-5 мин между уроками (завершаемость 75-80%)
+          <br><a href="https://biz.coddyschool.com/en/blog/edtech-trends-2025-2026" target="_blank" rel="noopener" class="source-link">EdTech тренды 2025-2026 &#8599;</a>
+        </div>
+        <div class="pain-block">
+          <div class="block-title pain-t">&#10060; Болевые точки</div>
+          <ul class="block-list">
+            <li>Расходы быстро накапливаются при нескольких занятиях</li>
+            <li>Нестабильное качество между преподавателями</li>
+          </ul>
+        </div>
+        <div class="opp-block">
+          <div class="block-title opp-t">&#9989; Возможности</div>
+          <ul class="block-list">
+            <li>Подписочные пакеты по предметам</li>
+            <li>AI-рейтинг качества преподавателей</li>
+            <li>Геймификация прогресса для детей</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-connector">&#9654;</div>
+
+    <!-- ── STAGE 6 ── -->
+    <div class="stage-card">
+      <div class="stage-head" style="background: linear-gradient(135deg, #1a73e8, #0d47a1);">
+        <span class="stage-num">6</span>
+        <h3>Лояльность и удержание</h3>
+        <div class="stage-subtitle">Loyalty &amp; Retention</div>
+      </div>
+      <div class="stage-body">
+        <div>
+          <div class="block-title actions-t">&#9654; Действия</div>
+          <ul class="block-list">
+            <li>Продление подписок, покупка новых курсов</li>
+            <li>Пробуют новые предметы для ребёнка</li>
+            <li>Рекомендуют платформу знакомым</li>
+            <li>Следят за любимыми преподавателями</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-title touch-t">&#128204; Точки контакта</div>
+          <ul class="block-list touch">
+            <li>Программа лояльности</li>
+            <li>Реферальная система</li>
+            <li>Персональные рекомендации</li>
+            <li>Сезонные акции</li>
+          </ul>
+        </div>
+        <div class="emotion-block">
+          <div class="block-title emotion-t">&#127751; Эмоции</div>
+          <span class="emoji">&#x1F60D;</span> Доверие сформировано, ребёнок привязан к любимым преподавателям
+        </div>
+        <div class="micro-block">
+          <div class="block-title micro-t">&#128300; Микротренд</div>
+          AI-рекомендации &laquo;следующий курс&raquo; по траектории обучения, функции сообщества (группы родителей по интересам), подписка на преподавателя. +30% возвращающихся учеников у Outschool
+          <br><a href="https://canvasbusinessmodel.com/blogs/marketing-strategy/outschool-marketing-strategy" target="_blank" rel="noopener" class="source-link">Outschool: +30% returning students &#8599;</a>
+        </div>
+        <div class="pain-block">
+          <div class="block-title pain-t">&#10060; Болевые точки</div>
+          <ul class="block-list">
+            <li>Чувствительность к цене на рос. рынке</li>
+            <li>Конкурентные предложения от Skyeng, Skysmart</li>
+          </ul>
+        </div>
+        <div class="opp-block">
+          <div class="block-title opp-t">&#9989; Возможности</div>
+          <ul class="block-list">
+            <li>Семейные тарифы (скидка на 2+ детей)</li>
+            <li>Скидки за лояльность / cashback</li>
+            <li>Конструктор &laquo;учебных траекторий&raquo;</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage-connector">&#9654;</div>
+
+    <!-- ── STAGE 7 ── -->
+    <div class="stage-card">
+      <div class="stage-head" style="background: linear-gradient(135deg, #4285f4, #1a73e8);">
+        <span class="stage-num">7</span>
+        <h3>Адвокация</h3>
+        <div class="stage-subtitle">Advocacy</div>
+      </div>
+      <div class="stage-body">
+        <div>
+          <div class="block-title actions-t">&#9654; Действия</div>
+          <ul class="block-list">
+            <li>Пишут отзывы на платформе и внешних сайтах</li>
+            <li>Делятся успехами ребёнка в соцсетях</li>
+            <li>Приглашают других родителей по реферальной ссылке</li>
+            <li>Становятся амбассадорами сообщества</li>
+          </ul>
+        </div>
+        <div>
+          <div class="block-title touch-t">&#128204; Точки контакта</div>
+          <ul class="block-list touch">
+            <li>Система отзывов</li>
+            <li>Реферальная программа</li>
+            <li>Шаринг в VK, Telegram, WhatsApp</li>
+            <li>Родительское сообщество</li>
+          </ul>
+        </div>
+        <div class="emotion-block">
+          <div class="block-title emotion-t">&#127751; Эмоции</div>
+          <span class="emoji">&#x1F31F;</span> Гордость за достижения ребёнка, желание помочь другим родителям &mdash; <strong>пик лояльности</strong>
+        </div>
+        <div class="micro-block">
+          <div class="block-title micro-t">&#128300; Микротренд</div>
+          UGC-видеоотзывы (родители снимают прогресс ребёнка), реферальная программа с кэшбэком, уровневая программа амбассадоров. Рост партнёрского канала +15%
+          <br><a href="https://canvasbusinessmodel.com/products/outschool-marketing-mix" target="_blank" rel="noopener" class="source-link">Outschool: партнёрский рост +15% &#8599;</a>
+        </div>
+        <div class="pain-block">
+          <div class="block-title pain-t">&#10060; Болевые точки</div>
+          <ul class="block-list">
+            <li>Нет мотивации делиться (отсутствие бонусов)</li>
+            <li>Неудобный процесс написания отзыва</li>
+          </ul>
+        </div>
+        <div class="opp-block">
+          <div class="block-title opp-t">&#9989; Возможности</div>
+          <ul class="block-list">
+            <li>&laquo;Поделись достижением&raquo; &mdash; соц. карточки для VK</li>
+            <li>Бонусы за рефералов (скидка обоим)</li>
+            <li>Уровни амбассадора с эксклюзивами</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <h3>Источники и ссылки</h3>
+    <ol class="footer-sources">
+      <li><a href="https://www.trustpilot.com/review/outschool.com" target="_blank" rel="noopener">Outschool на Trustpilot &mdash; 4.5/5, 3 210 отзывов, 85% пятизвёздочных</a></li>
+      <li><a href="https://support.outschool.com/en/articles/3570276-new-teacher-faq" target="_blank" rel="noopener">Outschool Support &mdash; процесс регистрации и FAQ для новых пользователей</a></li>
+      <li><a href="https://www.todaysparent.com/kids/school-age/outschool-review/" target="_blank" rel="noopener">Today's Parent &mdash; подробный обзор Outschool (UX, цены, впечатления)</a></li>
+      <li><a href="https://biz.coddyschool.com/en/blog/edtech-trends-2025-2026" target="_blank" rel="noopener">Coddy School &mdash; EdTech тренды 2025-2026 (AI, геймификация, микрообучение)</a></li>
+      <li><a href="https://canvasbusinessmodel.com/blogs/marketing-strategy/outschool-marketing-strategy" target="_blank" rel="noopener">Canvas Business Model &mdash; маркетинговая стратегия Outschool (+30% returning students)</a></li>
+      <li><a href="https://canvasbusinessmodel.com/products/outschool-marketing-mix" target="_blank" rel="noopener">Canvas Business Model &mdash; маркетинг-микс Outschool (партнёрский рост +15%)</a></li>
+    </ol>
+    <div class="footer-note">
+      Данные о российском рынке: рынок EdTech &mdash; 154 млрд &#8381; (2026, рост 12% г/г). 43% родителей учеников 7-11 классов нанимают репетиторов.
+      Ключевые конкуренты: Skyeng, Skysmart, Tetrika. Ценовой диапазон Outschool: $10-30/час, комиссия платформы 30%.
+      <br>CJM составлен: май 2026
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Smooth horizontal scroll with mouse wheel on the stages container
+  (function() {
+    var scroll = document.getElementById('stagesScroll');
+    if (!scroll) return;
+    scroll.addEventListener('wheel', function(e) {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        scroll.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
+  })();
+</script>
+</body>
+</html>
