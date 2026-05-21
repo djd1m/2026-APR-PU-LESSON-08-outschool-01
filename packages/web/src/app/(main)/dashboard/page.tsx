@@ -111,17 +111,17 @@ export default function DashboardPage() {
       {data && (
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card className="p-5 text-center">
-            <p className="text-2xl font-bold text-gray-900">{data.upcomingClasses.length}</p>
+            <p className="text-2xl font-bold text-gray-900">{(data.upcomingClasses || []).length}</p>
             <p className="mt-1 text-sm text-gray-500">Предстоящих занятий</p>
           </Card>
           <Card className="p-5 text-center">
             <p className="text-2xl font-bold text-gray-900">
-              {data.totalSpent.toLocaleString('ru-RU')} &#8381;
+              {(data.totalSpent ?? 0).toLocaleString('ru-RU')} &#8381;
             </p>
             <p className="mt-1 text-sm text-gray-500">Потрачено</p>
           </Card>
           <Card className="p-5 text-center">
-            <p className="text-2xl font-bold text-gray-900">{data.childrenCount}</p>
+            <p className="text-2xl font-bold text-gray-900">{data.childrenCount ?? 0}</p>
             <p className="mt-1 text-sm text-gray-500">Детей</p>
           </Card>
         </div>
@@ -163,7 +163,14 @@ export default function DashboardPage() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {bookings.map((booking) => (
+            {(data.upcomingClasses || []).length === 0 ? (
+              <Card className="p-8 text-center">
+                <p className="text-gray-500">Нет предстоящих занятий</p>
+                <Link href="/classes" className="mt-2 inline-block text-primary-600 hover:underline text-sm">
+                  Перейти в каталог
+                </Link>
+              </Card>
+            ) : (data.upcomingClasses || []).map((booking) => (
               <Card key={booking.id} className="flex items-center justify-between p-5">
                 <div>
                   <Link
@@ -187,8 +194,8 @@ export default function DashboardPage() {
                     </Link>
                   )}
                   <div className="text-right">
-                    <Badge variant={statusVariant[booking.status]}>
-                      {statusLabel[booking.status]}
+                    <Badge variant={statusVariant[booking.status] || 'secondary'}>
+                      {statusLabel[booking.status] || booking.status}
                     </Badge>
                     <p className="mt-1 text-sm text-gray-500">
                       {new Date(booking.nextSession).toLocaleDateString('ru-RU', {

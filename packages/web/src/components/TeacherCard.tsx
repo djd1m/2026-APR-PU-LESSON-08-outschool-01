@@ -47,12 +47,12 @@ function Avatar({
     );
   }
 
-  const initials = name
+  const initials = (name || '')
     .split(' ')
     .map((w) => w.charAt(0))
     .join('')
     .slice(0, 2)
-    .toUpperCase();
+    .toUpperCase() || '?';
 
   return (
     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-xl font-semibold text-primary-700">
@@ -83,14 +83,14 @@ export function TeacherCard({ teacher }: TeacherCardProps) {
             </div>
 
             <div className="mt-1.5 flex flex-wrap gap-1.5">
-              {teacher.subjects.slice(0, 3).map((subj) => (
+              {(teacher.subjects || []).slice(0, 3).map((subj) => (
                 <Badge key={subj} variant="primary">
                   {subj}
                 </Badge>
               ))}
-              {teacher.subjects.length > 3 && (
+              {(teacher.subjects || []).length > 3 && (
                 <Badge variant="secondary">
-                  +{teacher.subjects.length - 3}
+                  +{(teacher.subjects || []).length - 3}
                 </Badge>
               )}
             </div>

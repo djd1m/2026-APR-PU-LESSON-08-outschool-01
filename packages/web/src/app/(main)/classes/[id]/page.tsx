@@ -42,6 +42,7 @@ interface TeacherProfile {
     lastName?: string;
     avatarUrl?: string;
   };
+  classesCount?: number;
   _count?: {
     classes: number;
   };
@@ -151,7 +152,7 @@ export default async function ClassDetailPage({
   const teacherUser = cls.teacher?.user;
   const teacherName = teacherUser?.name
     || (teacherUser?.firstName ? `${teacherUser.firstName} ${teacherUser.lastName || ''}`.trim() : null)
-    || (cls as Record<string, unknown>).teacherName as string
+    || (cls as unknown as { teacherName?: string }).teacherName
     || 'Преподаватель';
   const teacherInitial = teacherName.charAt(0) || '?';
   const teacherClassesCount = cls.teacher?.classesCount ?? cls.teacher?._count?.classes ?? 0;

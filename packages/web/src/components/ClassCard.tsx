@@ -43,7 +43,7 @@ function StarRating({ rating }: { rating: number }) {
         </span>
       ))}
       <span className="ml-1 text-xs text-gray-600 font-medium">
-        {rating.toFixed(1)}
+        {(rating ?? 0).toFixed(1)}
       </span>
     </span>
   );
@@ -68,7 +68,7 @@ export function ClassCard({ classItem }: { classItem: ClassItem }) {
               className={`h-full w-full bg-gradient-to-br ${gradient} flex items-center justify-center`}
             >
               <span className="text-white/80 text-4xl font-bold">
-                {classItem.subject.charAt(0)}
+                {classItem.subject?.charAt(0) || '?'}
               </span>
             </div>
           )}
@@ -98,7 +98,7 @@ export function ClassCard({ classItem }: { classItem: ClassItem }) {
               </span>
             </div>
             <p className="text-base font-bold text-gray-900">
-              от {classItem.priceFrom.toLocaleString('ru-RU')} &#8381;
+              от {(classItem.priceFrom ?? 0).toLocaleString('ru-RU')} &#8381;
             </p>
           </div>
         </div>

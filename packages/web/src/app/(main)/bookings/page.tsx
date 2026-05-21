@@ -65,7 +65,9 @@ const statusColors: Record<string, string> = {
 
 function isUpcoming(enrollment: Enrollment): boolean {
   const now = new Date();
-  const sectionStart = new Date(enrollment.section.startTime);
+  const startTime = enrollment.section?.startTime;
+  if (!startTime) return false;
+  const sectionStart = new Date(startTime);
   return (
     sectionStart > now &&
     enrollment.status !== 'CANCELLED' &&
@@ -83,7 +85,7 @@ export default function BookingsPage() {
   const fetchEnrollments = useCallback(async () => {
     try {
       const res = await apiFetch<EnrollmentsResponse>('/enrollments');
-      setEnrollments(res.items);
+      setEnrollments(res?.items || []);
     } catch {
       setEnrollments([]);
     } finally {
@@ -181,10 +183,10 @@ export default function BookingsPage() {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 flex-wrap">
                           <Link
-                            href={`/classes/${enrollment.section.class.id}`}
+                            href={`/classes/${enrollment.section?.class?.id || ''}`}
                             className="font-semibold text-gray-900 hover:text-primary-600"
                           >
-                            {enrollment.section.class.title}
+                            {enrollment.section?.class?.title || 'Занятие'}
                           </Link>
                           {enrollment.isTrial && (
                             <Badge variant="primary">Пробное</Badge>
@@ -198,11 +200,11 @@ export default function BookingsPage() {
                           </span>
                         </div>
                         <p className="text-sm text-gray-600">
-                          {enrollment.child.name} &middot;{' '}
-                          {enrollment.section.class.teacher.user.name}
+                          {enrollment.child?.name || 'Ребёнок'} &middot;{' '}
+                          {enrollment.section?.class?.teacher?.user?.name || 'Преподаватель'}
                         </p>
                         <p className="text-sm text-gray-500">
-                          {formatDate(enrollment.section.startTime)}
+                          {enrollment.section?.startTime ? formatDate(enrollment.section.startTime) : ''}
                         </p>
                       </div>
                       <Button
@@ -235,10 +237,10 @@ export default function BookingsPage() {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 flex-wrap">
                           <Link
-                            href={`/classes/${enrollment.section.class.id}`}
+                            href={`/classes/${enrollment.section?.class?.id || ''}`}
                             className="font-semibold text-gray-900 hover:text-primary-600"
                           >
-                            {enrollment.section.class.title}
+                            {enrollment.section?.class?.title || 'Занятие'}
                           </Link>
                           {enrollment.isTrial && (
                             <Badge variant="primary">Пробное</Badge>
@@ -252,11 +254,11 @@ export default function BookingsPage() {
                           </span>
                         </div>
                         <p className="text-sm text-gray-600">
-                          {enrollment.child.name} &middot;{' '}
-                          {enrollment.section.class.teacher.user.name}
+                          {enrollment.child?.name || 'Ребёнок'} &middot;{' '}
+                          {enrollment.section?.class?.teacher?.user?.name || 'Преподаватель'}
                         </p>
                         <p className="text-sm text-gray-500">
-                          {formatDate(enrollment.section.startTime)}
+                          {enrollment.section?.startTime ? formatDate(enrollment.section.startTime) : ''}
                         </p>
                       </div>
                     </div>
